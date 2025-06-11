@@ -10,7 +10,7 @@ public class Config
 
 public class DeviceConfig
 {
-    [JsonProperty("modes")] public IDictionary<string, object>? Modes;
+    [JsonProperty("modes")] public IDictionary<string, IDictionary<string, IEnumerable<InputConfig>>>? Modes;
     [JsonProperty("inputDeviceType")] public string? InputDeviceType;
 
     [JsonProperty("_instanceName")] public string? InstanceName;
@@ -23,4 +23,9 @@ public class DeviceConfig
     [JsonProperty("_subtype")] public int? Subtype;
     [JsonProperty("_usage")] public string? Usage;
     [JsonProperty("_usagePage")] public string? UsagePage;
+}
+
+public class InputConfig
+{
+
 }

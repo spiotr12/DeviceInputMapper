@@ -12,11 +12,12 @@ class Program
         var configFilePath = "C:\\Projects\\DeviceInputMapper\\config.json";
 
         var deviceController = new DeviceController(directInput, configFilePath);
-        deviceController.PrintAllDevicesInfo();
+        // deviceController.PrintAllDevicesInfo();
 
         var config = deviceController.LoadConfig();
 
         var allTasks = new List<Task>();
+        var handlers = new List<object>();
 
         foreach (var (id, deviceConfig) in config.Devices)
         {
@@ -28,6 +29,8 @@ class Program
                 {
                     var joystick = new Joystick(directInput, instanceGuid);
                     var handler = new JoystickHandler(deviceConfig, joystick);
+                    handlers.Add(handler);
+                    handler.EnableLogging = true;
                     allTasks.Add(handler.Run());
                 }
 
@@ -35,6 +38,7 @@ class Program
                 {
                     var keyboard = new Keyboard(directInput);
                     var handler = new KeyboardHandler(deviceConfig, keyboard);
+                    handlers.Add(handler);
                     allTasks.Add(handler.Run());
                 }
 
@@ -42,6 +46,7 @@ class Program
                 {
                     var mouse = new Mouse(directInput);
                     var handler = new MouseHandler(deviceConfig, mouse);
+                    handlers.Add(handler);
                     allTasks.Add(handler.Run());
                 }
             }
@@ -56,77 +61,5 @@ class Program
         {
             yield return true;
         }
-    }
-}
-
-class Handler<T, TRaw, TUpdate>
-    where T : class, IDeviceState<TRaw, TUpdate>, new()
-    where TRaw : struct
-    where TUpdate : struct, IStateUpdate
-{
-    protected readonly DeviceConfig _config;
-    protected readonly CustomDevice<T, TRaw, TUpdate> _device;
-
-    public Handler(DeviceConfig config, CustomDevice<T, TRaw, TUpdate> device)
-    {
-        _config = config;
-        _device = device;
-
-        _device.Properties.BufferSize = 128;
-        _device.Acquire();
-    }
-
-    public Task Run()
-    {
-        return Task.Run(() =>
-        {
-            Console.WriteLine("{0} [{1}]\n> Task started\n", _config.InstanceName, _config.InstanceGuid);
-
-            // Poll events from joystick
-            while (true)
-            {
-                _device.Poll();
-                var datas = _device.GetBufferedData();
-                foreach (var state in datas)
-                {
-                    Console.WriteLine("{0} [{1}] ", _config.InstanceName, _config.InstanceGuid);
-                    Console.WriteLine("> {0}", state);
-                    Console.WriteLine();
-                }
-            }
-        }, new CancellationToken());
-    }
-}
-
-class JoystickHandler : Handler<JoystickState, RawJoystickState, JoystickUpdate>
-{
-    private readonly Joystick _joystick;
-
-    public JoystickHandler(DeviceConfig config, Joystick joystick)
-        : base(config, joystick)
-    {
-        _joystick = joystick;
-    }
-}
-
-class KeyboardHandler : Handler<KeyboardState, RawKeyboardState, KeyboardUpdate>
-{
-    private readonly Keyboard _keyboard;
-
-    public KeyboardHandler(DeviceConfig config, Keyboard keyboard)
-        : base(config, keyboard)
-    {
-        _keyboard = keyboard;
-    }
-}
-
-class MouseHandler : Handler<MouseState, RawMouseState, MouseUpdate>
-{
-    private readonly Mouse _mouse;
-
-    public MouseHandler(DeviceConfig config, Mouse mouse)
-        : base(config, mouse)
-    {
-        _mouse = mouse;
     }
 }

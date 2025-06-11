@@ -38,8 +38,8 @@ public class DeviceController
 
             if (deviceConfig.Modes == null || deviceConfig.Modes.Count == 0)
             {
-                deviceConfig.Modes = new Dictionary<string, object>();
-                deviceConfig.Modes.Add("Default", new Object());
+                deviceConfig.Modes = new Dictionary<string, IDictionary<string, IEnumerable<InputConfig>>>();
+                deviceConfig.Modes.Add("Default", new Dictionary<string, IEnumerable<InputConfig>>());
             }
         }
 
