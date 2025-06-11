@@ -17,8 +17,13 @@ public class DeviceConfig
     [JsonProperty("_instanceGuid")] public string? InstanceGuid;
     [JsonProperty("_productName")] public string? ProductName;
     [JsonProperty("_productGuid")] public string? ProductGuid;
-    [JsonProperty("_forceFeedbackDriverGuid")] public string? ForceFeedbackDriverGuid;
-    [JsonProperty("_isHumanInterfaceDevice")] public bool? IsHumanInterfaceDevice;
+
+    [JsonProperty("_forceFeedbackDriverGuid")]
+    public string? ForceFeedbackDriverGuid;
+
+    [JsonProperty("_isHumanInterfaceDevice")]
+    public bool? IsHumanInterfaceDevice;
+
     [JsonProperty("_type")] public string? Type;
     [JsonProperty("_subtype")] public int? Subtype;
     [JsonProperty("_usage")] public string? Usage;
@@ -27,5 +32,6 @@ public class DeviceConfig
 
 public class InputConfig
 {
-
+    [JsonProperty("condition")] public string Condition;
+    [JsonProperty("action")] public string Action;
 }

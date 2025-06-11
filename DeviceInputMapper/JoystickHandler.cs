@@ -1,4 +1,5 @@
 ﻿using SharpDX.DirectInput;
+using Z.Expressions;
 
 namespace DeviceInputMapper;
 
@@ -6,14 +7,14 @@ class JoystickHandler : Handler<JoystickState, RawJoystickState, JoystickUpdate>
 {
     private readonly Joystick _joystick;
 
-    public JoystickHandler(DeviceConfig config, Joystick joystick)
-        : base(config, joystick)
+    public JoystickHandler(string id, DeviceConfig config, Joystick joystick)
+        : base(id, config, joystick)
     {
         _joystick = joystick;
     }
 
-    protected override void HandleFn(JoystickUpdate state)
+    protected override string GetKeyName(JoystickUpdate state)
     {
-        var config = GetCurrentModeConfig();
+        return state.Offset.ToString();
     }
 }

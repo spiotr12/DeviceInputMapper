@@ -4,15 +4,17 @@ namespace DeviceInputMapper;
 
 class KeyboardHandler : Handler<KeyboardState, RawKeyboardState, KeyboardUpdate>
 {
-    private readonly Keyboard _keyboard;
+    private readonly SharpDX.DirectInput.Keyboard _keyboard;
 
-    public KeyboardHandler(DeviceConfig config, Keyboard keyboard)
-        : base(config, keyboard)
+    public KeyboardHandler(string id, DeviceConfig config, SharpDX.DirectInput.Keyboard keyboard)
+        : base(id, config, keyboard)
     {
         _keyboard = keyboard;
     }
 
-    protected override void HandleFn(KeyboardUpdate state)
+    protected override string GetKeyName(KeyboardUpdate state)
     {
+        throw new NotImplementedException();
     }
+
 }

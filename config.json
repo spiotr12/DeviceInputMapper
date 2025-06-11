@@ -3,21 +3,20 @@
     "dc041e30-414d-11f0-8001-444553540000": {
       "modes": {
         "Default": {
-          "Button0": [
+          "Buttons0": [
             {
-              "condition": "",
-              "action": ""
-            },
-            {
-              "condition": ""
+              "condition": "state.value == 128",
+              "action": "keyClick(Keys.D1)"
             }
           ],
-          "Button1": [
+          "Buttons1": [
             {
-              "condition": ""
+              "condition": "state.value == 128",
+              "action": "keyPress(Keys.B)"
             },
             {
-              "condition": ""
+              "condition": "state.value == 0",
+              "action": "keyRelease(Keys.B)"
             }
           ]
         }
