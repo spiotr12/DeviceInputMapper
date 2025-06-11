@@ -3,10 +3,39 @@
     "dc041e30-414d-11f0-8001-444553540000": {
       "modes": {
         "Default": {
+          "X": [
+            {
+              "condition": "state.value < 32767",
+              "action": "keyRelease(Keys.D); keyPress(Keys.A)"
+            },
+            {
+              "condition": "state.value > 32767",
+              "action": "keyRelease(Keys.A); keyPress(Keys.D)"
+            },
+            {
+              "condition": "state.value == 32767",
+              "action": "keyRelease(Keys.A); keyRelease(Keys.D)"
+            }
+          ],
+          "Y": [
+            {
+              "condition": "state.value < 32767",
+              "action": "keyRelease(Keys.S); keyPress(Keys.W)"
+            },
+            {
+              "condition": "state.value > 32767",
+              "action": "keyRelease(Keys.W); keyPress(Keys.sS)"
+            },
+            {
+              "condition": "state.value == 32767",
+              "action": "keyRelease(Keys.W); keyRelease(Keys.S)"
+            }
+          ],
+          "Z": [],
           "Buttons0": [
             {
               "condition": "state.value == 128",
-              "action": "keyClick(Keys.D1)"
+              "action": "keyClick(Keys.D1);"
             }
           ],
           "Buttons1": [

@@ -66,11 +66,15 @@ abstract class Handler<T, TRaw, TUpdate>
                     {
                         Console.WriteLine("{0} [{1}] ", _config.InstanceName, _config.InstanceGuid);
                         Console.WriteLine("> {0}", state);
-                        Console.WriteLine();
                     }
 
                     DeviceState[GetKeyName(state)] = state;
                     HandleFn(state);
+
+                    if (EnableLogging)
+                    {
+                        Console.WriteLine();
+                    }
                 }
             }
         }, new CancellationToken());
@@ -87,6 +91,12 @@ abstract class Handler<T, TRaw, TUpdate>
             foreach (var inputConfig in inputConfigs)
             {
                 var condition = ParseCondition(inputConfig.Condition, state);
+
+                if (EnableLogging)
+                {
+                    Console.WriteLine("[Condition] {0} = {1}", inputConfig.Condition ,condition);
+                }
+
                 if (condition)
                 {
                     ParseAction(inputConfig.Action, state);
@@ -105,8 +115,6 @@ abstract class Handler<T, TRaw, TUpdate>
         var keyClick = Keyboard.Click;
         var keyPress = Keyboard.Press;
         var keyRelease = Keyboard.Release;
-
-        var mouseClick = Keyboard.Click;
 
         Eval.Execute(action, new
         {
