@@ -12,6 +12,7 @@
         <PackageReference Include="AutoMapper" Version="14.0.0"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
         <PackageReference Include="SharpDX.DirectInput" Version="4.2.0"/>
+        <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
         <PackageReference Include="SharpDX.RawInput" Version="4.2.0"/>
         <PackageReference Include="SharpDX.XInput" Version="4.2.0"/>
         <PackageReference Include="Z.Expressions.Eval" Version="6.2.12"/>

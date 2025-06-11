@@ -3,7 +3,7 @@ using Z.Expressions;
 
 namespace DeviceInputMapper;
 
-abstract class Handler<T, TRaw, TUpdate>
+abstract class DirectInputHandler<T, TRaw, TUpdate>
     where T : class, IDeviceState<TRaw, TUpdate>, new()
     where TRaw : struct
     where TUpdate : struct, IStateUpdate
@@ -22,7 +22,7 @@ abstract class Handler<T, TRaw, TUpdate>
     protected readonly DeviceConfig _config;
     protected readonly CustomDevice<T, TRaw, TUpdate> _device;
 
-    public Handler(string id, DeviceConfig config, CustomDevice<T, TRaw, TUpdate> device)
+    public DirectInputHandler(string id, DeviceConfig config, CustomDevice<T, TRaw, TUpdate> device)
     {
         _id = id;
         _config = config;
@@ -103,6 +103,11 @@ abstract class Handler<T, TRaw, TUpdate>
                 }
             }
         }
+    }
+
+    protected bool ParseValue(string condition, TUpdate state)
+    {
+        return Eval.Execute<bool>(condition, new { state, deviceState = DeviceState });
     }
 
     protected bool ParseCondition(string condition, TUpdate state)

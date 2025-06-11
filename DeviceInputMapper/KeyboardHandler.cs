@@ -2,7 +2,7 @@
 
 namespace DeviceInputMapper;
 
-class KeyboardHandler : Handler<KeyboardState, RawKeyboardState, KeyboardUpdate>
+class KeyboardHandler : DirectInputHandler<KeyboardState, RawKeyboardState, KeyboardUpdate>
 {
     private readonly SharpDX.DirectInput.Keyboard _keyboard;
 

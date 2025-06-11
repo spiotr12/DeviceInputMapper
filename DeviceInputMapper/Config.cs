@@ -3,6 +3,14 @@ using SharpDX.DirectInput;
 
 namespace DeviceInputMapper;
 
+public static class InputDeviceType
+{
+    public static string Joystick = "joystick";
+    public static string Gamepad = "gamepad";
+    public static string Mouse = "mouse";
+    public static string Keyboard = "keyboard";
+}
+
 public class Config
 {
     [JsonProperty("devices")] public IDictionary<string, DeviceConfig> Devices;
@@ -10,6 +18,7 @@ public class Config
 
 public class DeviceConfig
 {
+    [JsonProperty("description")] public string? Description;
     [JsonProperty("modes")] public IDictionary<string, IDictionary<string, IEnumerable<InputConfig>>>? Modes;
     [JsonProperty("inputDeviceType")] public string? InputDeviceType;
 
@@ -34,4 +43,7 @@ public class InputConfig
 {
     [JsonProperty("condition")] public string Condition;
     [JsonProperty("action")] public string Action;
+
+
+    [JsonProperty("valueParser")] public string? ValueParser;
 }

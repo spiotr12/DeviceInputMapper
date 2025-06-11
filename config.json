@@ -1,51 +1,61 @@
 {
   "devices": {
     "dc041e30-414d-11f0-8001-444553540000": {
+      "description": "Side Panel",
       "modes": {
         "Default": {
           "X": [
             {
               "condition": "state.value < 32767",
-              "action": "keyRelease(Keys.D); keyPress(Keys.A)"
+              "action": "keyRelease(Keys.D); keyPress(Keys.A)",
+              "valueParser": "state.value"
             },
             {
               "condition": "state.value > 32767",
-              "action": "keyRelease(Keys.A); keyPress(Keys.D)"
+              "action": "keyRelease(Keys.A); keyPress(Keys.D)",
+              "valueParser": null
             },
             {
               "condition": "state.value == 32767",
-              "action": "keyRelease(Keys.A); keyRelease(Keys.D)"
+              "action": "keyRelease(Keys.A); keyRelease(Keys.D)",
+              "valueParser": null
             }
           ],
           "Y": [
             {
               "condition": "state.value < 32767",
-              "action": "keyRelease(Keys.S); keyPress(Keys.W)"
+              "action": "keyRelease(Keys.S); keyPress(Keys.W)",
+              "valueParser": null
             },
             {
               "condition": "state.value > 32767",
-              "action": "keyRelease(Keys.W); keyPress(Keys.sS)"
+              "action": "keyRelease(Keys.W); keyPress(Keys.S)",
+              "valueParser": null
             },
             {
               "condition": "state.value == 32767",
-              "action": "keyRelease(Keys.W); keyRelease(Keys.S)"
+              "action": "keyRelease(Keys.W); keyRelease(Keys.S)",
+              "valueParser": null
             }
           ],
           "Z": [],
           "Buttons0": [
             {
               "condition": "state.value == 128",
-              "action": "keyClick(Keys.D1);"
+              "action": "keyClick(Keys.D1);",
+              "valueParser": null
             }
           ],
           "Buttons1": [
             {
               "condition": "state.value == 128",
-              "action": "keyPress(Keys.B)"
+              "action": "keyPress(Keys.B)",
+              "valueParser": null
             },
             {
               "condition": "state.value == 0",
-              "action": "keyRelease(Keys.B)"
+              "action": "keyRelease(Keys.B)",
+              "valueParser": null
             }
           ]
         }
@@ -55,6 +65,38 @@
       "_instanceGuid": "dc041e30-414d-11f0-8001-444553540000",
       "_productName": "Saitek Side Panel Control Deck",
       "_productGuid": "22180738-0000-0000-0000-504944564944",
+      "_forceFeedbackDriverGuid": "00000000-0000-0000-0000-000000000000",
+      "_isHumanInterfaceDevice": true,
+      "_type": "Gamepad",
+      "_subtype": 258,
+      "_usage": "VrHeadTracker",
+      "_usagePage": "Generic"
+    },
+    "116a35a0-cbbf-11ef-8007-444553540000": {
+      "modes": {
+        "Default": {}
+      },
+      "inputDeviceType": "gamepad",
+      "_instanceName": "Controller (Xbox One For Windows)",
+      "_instanceGuid": "116a35a0-cbbf-11ef-8007-444553540000",
+      "_productName": "Controller (Xbox One For Windows)",
+      "_productGuid": "02ff045e-0000-0000-0000-504944564944",
+      "_forceFeedbackDriverGuid": "00000000-0000-0000-0000-000000000000",
+      "_isHumanInterfaceDevice": true,
+      "_type": "Gamepad",
+      "_subtype": 258,
+      "_usage": "VrHeadTracker",
+      "_usagePage": "Generic"
+    },
+    "116a83c0-cbbf-11ef-8009-444553540000": {
+      "modes": {
+        "Default": {}
+      },
+      "inputDeviceType": "gamepad",
+      "_instanceName": "Controller (Xbox One For Windows)",
+      "_instanceGuid": "116a83c0-cbbf-11ef-8009-444553540000",
+      "_productName": "Controller (Xbox One For Windows)",
+      "_productGuid": "02ff045e-0000-0000-0000-504944564944",
       "_forceFeedbackDriverGuid": "00000000-0000-0000-0000-000000000000",
       "_isHumanInterfaceDevice": true,
       "_type": "Gamepad",

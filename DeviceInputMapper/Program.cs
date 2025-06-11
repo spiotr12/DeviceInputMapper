@@ -1,4 +1,5 @@
 ﻿using SharpDX.DirectInput;
+using SharpDX.XInput;
 
 namespace DeviceInputMapper;
 
@@ -11,13 +12,23 @@ class Program
         var configFilePath = "C:\\Projects\\DeviceInputMapper\\config.json";
 
         var deviceController = new DeviceController(directInput, configFilePath);
-        // deviceController.PrintAllDevicesInfo();
+        deviceController.PrintAllDevicesInfo();
 
         var config = deviceController.LoadConfig();
 
         var allTasks = new List<Task>();
         var handlers = new List<object>();
-        var globalState = new Dictionary<string, IDictionary<string, object>>();
+
+        // var c1 = new Controller(UserIndex.One);
+        // var c2 = new Controller(UserIndex.Two);
+        //
+        // while (true)
+        // {
+        //     if (c1.IsConnected)
+        //         Console.WriteLine("c1 {0}", c1.GetState().Gamepad.ToString());
+        //     if (c2.IsConnected)
+        //         Console.WriteLine("c2 {0}", c2.GetState().Gamepad.ToString());
+        // }
 
         foreach (var (id, deviceConfig) in config.Devices)
         {
@@ -25,7 +36,7 @@ class Program
             var device = deviceController.FindByInstanceGuid(instanceGuid);
             if (device != null)
             {
-                if (deviceConfig.InputDeviceType == "joystick")
+                if (deviceConfig.InputDeviceType == InputDeviceType.Joystick)
                 {
                     var joystick = new Joystick(directInput, instanceGuid);
                     var handler = new JoystickHandler(id, deviceConfig, joystick);
@@ -34,7 +45,11 @@ class Program
                     allTasks.Add(handler.Run());
                 }
 
-                if (deviceConfig.InputDeviceType == "keyboard")
+                if (deviceConfig.InputDeviceType == InputDeviceType.Gamepad)
+                {
+                }
+
+                if (deviceConfig.InputDeviceType == InputDeviceType.Keyboard)
                 {
                     var keyboard = new SharpDX.DirectInput.Keyboard(directInput);
                     var handler = new KeyboardHandler(id, deviceConfig, keyboard);
@@ -42,7 +57,7 @@ class Program
                     allTasks.Add(handler.Run());
                 }
 
-                if (deviceConfig.InputDeviceType == "mouse")
+                if (deviceConfig.InputDeviceType == InputDeviceType.Mouse)
                 {
                     var mouse = new SharpDX.DirectInput.Mouse(directInput);
                     var handler = new MouseHandler(id, deviceConfig, mouse);
@@ -53,13 +68,5 @@ class Program
         }
 
         await Task.WhenAll(allTasks);
-    }
-
-    private static IEnumerable<bool> Infinite()
-    {
-        while (true)
-        {
-            yield return true;
-        }
     }
 }

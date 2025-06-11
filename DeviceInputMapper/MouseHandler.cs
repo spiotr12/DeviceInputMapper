@@ -2,7 +2,7 @@
 
 namespace DeviceInputMapper;
 
-class MouseHandler : Handler<MouseState, RawMouseState, MouseUpdate>
+class MouseHandler : DirectInputHandler<MouseState, RawMouseState, MouseUpdate>
 {
     private readonly SharpDX.DirectInput.Mouse _mouse;
 

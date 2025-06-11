@@ -3,11 +3,11 @@ using Z.Expressions;
 
 namespace DeviceInputMapper;
 
-class JoystickHandler : DirectInputHandler<JoystickState, RawJoystickState, JoystickUpdate>
+class ControllerHandler : JoystickHandler
 {
     private readonly Joystick _joystick;
 
-    public JoystickHandler(string id, DeviceConfig config, Joystick joystick)
+    public ControllerHandler(string id, DeviceConfig config, Joystick joystick)
         : base(id, config, joystick)
     {
         _joystick = joystick;
