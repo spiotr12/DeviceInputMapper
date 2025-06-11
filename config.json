@@ -1,0 +1,52 @@
+{
+  "devices": {
+    "dc041e30-414d-11f0-8001-444553540000": {
+      "modes": {
+        "Default": {}
+      },
+      "inputDeviceType": "joystick",
+      "_instanceName": "Saitek Side Panel Control Deck",
+      "_instanceGuid": "dc041e30-414d-11f0-8001-444553540000",
+      "_productName": "Saitek Side Panel Control Deck",
+      "_productGuid": "22180738-0000-0000-0000-504944564944",
+      "_forceFeedbackDriverGuid": "00000000-0000-0000-0000-000000000000",
+      "_isHumanInterfaceDevice": true,
+      "_type": "Gamepad",
+      "_subtype": 258,
+      "_usage": "VrHeadTracker",
+      "_usagePage": "Generic"
+    },
+    "116af8f0-cbbf-11ef-800e-444553540000": {
+      "modes": {
+        "Default": null
+      },
+      "inputDeviceType": "keyboard",
+      "_instanceName": "SteelSeries Apex Gaming Keyboard",
+      "_instanceGuid": "116af8f0-cbbf-11ef-800e-444553540000",
+      "_productName": "SteelSeries Apex Gaming Keyboard",
+      "_productGuid": "12021038-0000-0000-0000-504944564944",
+      "_forceFeedbackDriverGuid": "00000000-0000-0000-0000-000000000000",
+      "_isHumanInterfaceDevice": true,
+      "_type": "Device",
+      "_subtype": 256,
+      "_usage": "HapticsSimpleController",
+      "_usagePage": "Consumer"
+    },
+    "1169e780-cbbf-11ef-8002-444553540000": {
+      "modes": {
+        "Default": {}
+      },
+      "inputDeviceType": "mouse",
+      "_instanceName": "SteelSeries Rival 5",
+      "_instanceGuid": "1169e780-cbbf-11ef-8002-444553540000",
+      "_productName": "SteelSeries Rival 5",
+      "_productGuid": "183c1038-0000-0000-0000-504944564944",
+      "_forceFeedbackDriverGuid": "00000000-0000-0000-0000-000000000000",
+      "_isHumanInterfaceDevice": true,
+      "_type": "Device",
+      "_subtype": 256,
+      "_usage": "HapticsSimpleController",
+      "_usagePage": "Consumer"
+    }
+  }
+}
