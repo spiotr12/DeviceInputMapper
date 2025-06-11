@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using SharpDX.DirectInput;
 
-namespace JoystickController;
+namespace DeviceInputMapper;
 
 public class DeviceController
 {

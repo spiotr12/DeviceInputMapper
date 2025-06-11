@@ -2,14 +2,14 @@
 using SharpDX.RawInput;
 using DeviceType = SharpDX.DirectInput.DeviceType;
 
-namespace JoystickController;
+namespace DeviceInputMapper;
 
 class Program
 {
     static async Task Main(string[] args)
     {
         var directInput = new DirectInput();
-        var configFilePath = "C:\\Projects\\JoystickController\\config.json";
+        var configFilePath = "C:\\Projects\\DeviceInputMapper\\config.json";
 
         var deviceController = new DeviceController(directInput, configFilePath);
         deviceController.PrintAllDevicesInfo();

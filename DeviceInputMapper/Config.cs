@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SharpDX.DirectInput;
 
-namespace JoystickController;
+namespace DeviceInputMapper;
 
 public class Config
 {
