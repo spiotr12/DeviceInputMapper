@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="14.0.0" />
       <PackageReference Include="SharpDX.DirectInput" Version="4.2.0" />
       <PackageReference Include="SharpDX.RawInput" Version="4.2.0" />
       <PackageReference Include="SharpDX.XInput" Version="4.2.0" />
