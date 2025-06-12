@@ -6,56 +6,59 @@
         "Default": {
           "X": [
             {
-              "condition": "state.value < 32767",
-              "action": "keyRelease(Keys.D); keyPress(Keys.A)",
-              "valueParser": "state.value"
+              "condition": "value < 0",
+              "action": "keyRelease(Keys.D); keyPress(Keys.A)"
             },
             {
-              "condition": "state.value > 32767",
-              "action": "keyRelease(Keys.A); keyPress(Keys.D)",
-              "valueParser": null
+              "condition": "value > 0",
+              "action": "keyRelease(Keys.A); keyPress(Keys.D)"
             },
             {
-              "condition": "state.value == 32767",
-              "action": "keyRelease(Keys.A); keyRelease(Keys.D)",
-              "valueParser": null
+              "condition": "value == 0",
+              "action": "keyRelease(Keys.A); keyRelease(Keys.D)"
             }
           ],
           "Y": [
             {
-              "condition": "state.value < 32767",
-              "action": "keyRelease(Keys.S); keyPress(Keys.W)",
-              "valueParser": null
+              "condition": "value < 0",
+              "action": "keyRelease(Keys.S); keyPress(Keys.W)"
             },
             {
-              "condition": "state.value > 32767",
-              "action": "keyRelease(Keys.W); keyPress(Keys.S)",
-              "valueParser": null
+              "condition": "value > 0",
+              "action": "keyRelease(Keys.W); keyPress(Keys.S)"
             },
             {
-              "condition": "state.value == 32767",
-              "action": "keyRelease(Keys.W); keyRelease(Keys.S)",
-              "valueParser": null
+              "condition": "value == 0",
+              "action": "keyRelease(Keys.W); keyRelease(Keys.S)"
             }
           ],
           "Z": [],
           "Buttons0": [
             {
-              "condition": "state.value == 128",
-              "action": "keyClick(Keys.D1);",
-              "valueParser": null
+              "condition": "value == 1",
+              "action": "keyClick(Keys.D1);"
             }
           ],
           "Buttons1": [
             {
-              "condition": "state.value == 128",
-              "action": "keyPress(Keys.B)",
-              "valueParser": null
+              "condition": "value == 1",
+              "action": "keyPress(Keys.B)"
             },
             {
-              "condition": "state.value == 0",
-              "action": "keyRelease(Keys.B)",
-              "valueParser": null
+              "condition": "value == 0",
+              "action": "keyRelease(Keys.B)"
+            }
+          ],
+          "Buttons2": [
+            {
+              "condition": "value == 1 && getButtonValue(\"Buttons3\") == 1",
+              "action": "keyClick(Keys.P)"
+            }
+          ],
+          "Buttons5": [
+            {
+              "condition": "value == 1 && getDeviceButtonValue(\"116af8f0-cbbf-11ef-800e-444553540000\", \"LeftShift\") == 1",
+              "action": "keyClick(Keys.P)"
             }
           ]
         }
@@ -72,37 +75,39 @@
       "_usage": "VrHeadTracker",
       "_usagePage": "Generic"
     },
-    "116a35a0-cbbf-11ef-8007-444553540000": {
+    "116af8f0-cbbf-11ef-800e-444553540000": {
+      "description": "SteelSeries Apex Keyboard",
       "modes": {
         "Default": {}
       },
-      "inputDeviceType": "gamepad",
-      "_instanceName": "Controller (Xbox One For Windows)",
-      "_instanceGuid": "116a35a0-cbbf-11ef-8007-444553540000",
-      "_productName": "Controller (Xbox One For Windows)",
-      "_productGuid": "02ff045e-0000-0000-0000-504944564944",
+      "inputDeviceType": "keyboard",
+      "_instanceName": "SteelSeries Apex Gaming Keyboard",
+      "_instanceGuid": "116af8f0-cbbf-11ef-800e-444553540000",
+      "_productName": "SteelSeries Apex Gaming Keyboard",
+      "_productGuid": "12021038-0000-0000-0000-504944564944",
       "_forceFeedbackDriverGuid": "00000000-0000-0000-0000-000000000000",
       "_isHumanInterfaceDevice": true,
-      "_type": "Gamepad",
-      "_subtype": 258,
-      "_usage": "VrHeadTracker",
-      "_usagePage": "Generic"
+      "_type": "Device",
+      "_subtype": 256,
+      "_usage": "HapticsSimpleController",
+      "_usagePage": "Consumer"
     },
-    "116a83c0-cbbf-11ef-8009-444553540000": {
+    "1169e780-cbbf-11ef-8002-444553540000": {
+      "description": "SteelSeries Rival 5 Mouse",
       "modes": {
         "Default": {}
       },
-      "inputDeviceType": "gamepad",
-      "_instanceName": "Controller (Xbox One For Windows)",
-      "_instanceGuid": "116a83c0-cbbf-11ef-8009-444553540000",
-      "_productName": "Controller (Xbox One For Windows)",
-      "_productGuid": "02ff045e-0000-0000-0000-504944564944",
+      "inputDeviceType": "mouse",
+      "_instanceName": "SteelSeries Rival 5",
+      "_instanceGuid": "1169e780-cbbf-11ef-8002-444553540000",
+      "_productName": "SteelSeries Rival 5",
+      "_productGuid": "183c1038-0000-0000-0000-504944564944",
       "_forceFeedbackDriverGuid": "00000000-0000-0000-0000-000000000000",
       "_isHumanInterfaceDevice": true,
-      "_type": "Gamepad",
-      "_subtype": 258,
-      "_usage": "VrHeadTracker",
-      "_usagePage": "Generic"
+      "_type": "Device",
+      "_subtype": 256,
+      "_usage": "HapticsSimpleController",
+      "_usagePage": "Consumer"
     }
   }
 }

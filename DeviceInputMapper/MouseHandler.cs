@@ -12,8 +12,24 @@ class MouseHandler : DirectInputHandler<MouseState, RawMouseState, MouseUpdate>
         _mouse = mouse;
     }
 
-    protected override string GetKeyName(MouseUpdate state)
+    protected override string GetButtonName(MouseUpdate state)
     {
-        throw new NotImplementedException();
+        return state.Offset.ToString();
+    }
+
+    protected override double ParseValue(MouseUpdate state)
+    {
+        // Button
+        if (GetButtonName(state).Contains("Buttons"))
+        {
+            return state.Value == 0 ? 0 : 1;
+        }
+
+        if (GetButtonName(state).Contains("Z"))
+        {
+            return state.Value > 0 ? 1 : -1;
+        }
+
+        return state.Value;
     }
 }

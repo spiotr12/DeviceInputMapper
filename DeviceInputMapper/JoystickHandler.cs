@@ -13,8 +13,20 @@ class JoystickHandler : DirectInputHandler<JoystickState, RawJoystickState, Joys
         _joystick = joystick;
     }
 
-    protected override string GetKeyName(JoystickUpdate state)
+    protected override string GetButtonName(JoystickUpdate state)
     {
         return state.Offset.ToString();
+    }
+
+    protected override double ParseValue(JoystickUpdate state)
+    {
+        // Axis
+        if (!GetButtonName(state).Contains("Buttons"))
+        {
+            return Math.Round(((double)(state.Value - 32767) / 32767), 4);
+        }
+
+        // Button
+        return state.Value == 0 ? 0 : 1;
     }
 }

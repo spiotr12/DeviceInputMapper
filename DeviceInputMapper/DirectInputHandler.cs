@@ -9,14 +9,8 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
     where TUpdate : struct, IStateUpdate
 {
     public bool EnableLogging { get; set; }
-    public string Mode { get; set; }
 
     public IDictionary<string, TUpdate> DeviceState { get; }
-
-    public IDictionary<string, IStateUpdate> GetDeviceState()
-    {
-        return (IDictionary<string, IStateUpdate>)DeviceState;
-    }
 
     private readonly string _id;
     protected readonly DeviceConfig _config;
@@ -30,26 +24,13 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
 
         DeviceState = new Dictionary<string, TUpdate>();
 
-        if (_config.Modes != null)
-            Mode = _config.Modes.ContainsKey("Default") ? "Default" : _config.Modes.Keys.First();
-
         _device.Properties.BufferSize = 128;
         _device.Acquire();
     }
 
-    protected abstract string GetKeyName(TUpdate state);
+    protected abstract string GetButtonName(TUpdate state);
 
-    protected IDictionary<string, IEnumerable<InputConfig>> GetCurrentModeConfig()
-    {
-        if (_config.Modes == null || _config.Modes[Mode] == null)
-        {
-            throw new Exception("No device configuration found for this mode");
-        }
-
-        return _config.Modes[Mode];
-    }
-
-    public Task Run()
+    public virtual Task Run()
     {
         return Task.Run(() =>
         {
@@ -59,75 +40,65 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
             while (true)
             {
                 _device.Poll();
-                var datas = _device.GetBufferedData();
-                foreach (var state in datas)
+                var data = _device.GetBufferedData();
+                foreach (var state in data)
                 {
                     if (EnableLogging)
                     {
-                        Console.WriteLine("{0} [{1}] ", _config.InstanceName, _config.InstanceGuid);
-                        Console.WriteLine("> {0}", state);
+                        Console.WriteLine("{0} [{1}] ({2})", _config.InstanceName, _config.InputDeviceType, _id);
+                        Console.WriteLine("> {0}\n", state);
                     }
 
-                    DeviceState[GetKeyName(state)] = state;
-                    HandleFn(state);
+                    // Update global state
+                    var button = GetButtonName(state);
+                    var value = ParseValue(state);
+
+                    if (!State.Devices.ContainsKey(_id))
+                    {
+                        State.Devices.Add(_id, new Dictionary<string, double>());
+                    }
+
+                    if (!State.Devices[_id].ContainsKey(button))
+                    {
+                        State.Devices[_id].Add(button, value);
+                    }
+
+                    State.Devices[_id][button] = value;
 
                     if (EnableLogging)
                     {
-                        Console.WriteLine();
+                        Console.WriteLine(State.ToString());
                     }
+
+                    Handle(state, button, value);
                 }
             }
         }, new CancellationToken());
     }
 
-    protected void HandleFn(TUpdate state)
+    protected virtual void Handle(TUpdate state, string button, double value)
     {
-        var config = GetCurrentModeConfig();
-        IEnumerable<InputConfig> inputConfigs;
-        config.TryGetValue(GetKeyName(state), out inputConfigs);
-
-        if (inputConfigs != null && inputConfigs.Any())
+        if (GetCurrentModeConfig().TryGetValue(button, out var commands))
         {
-            foreach (var inputConfig in inputConfigs)
+            foreach (var command in commands)
             {
-                var condition = ParseCondition(inputConfig.Condition, state);
-
-                if (EnableLogging)
+                if (Executor.ParseCondition(command.Condition, _id, value))
                 {
-                    Console.WriteLine("[Condition] {0} = {1}", inputConfig.Condition ,condition);
-                }
-
-                if (condition)
-                {
-                    ParseAction(inputConfig.Action, state);
+                    Executor.ParseAction(command.Action, _id);
                 }
             }
         }
     }
 
-    protected bool ParseValue(string condition, TUpdate state)
+    protected IDictionary<string, IEnumerable<InputConfig>> GetCurrentModeConfig()
     {
-        return Eval.Execute<bool>(condition, new { state, deviceState = DeviceState });
-    }
-
-    protected bool ParseCondition(string condition, TUpdate state)
-    {
-        return Eval.Execute<bool>(condition, new { state, deviceState = DeviceState });
-    }
-
-    protected void ParseAction(string action, TUpdate state)
-    {
-        var keyClick = Keyboard.Click;
-        var keyPress = Keyboard.Press;
-        var keyRelease = Keyboard.Release;
-
-        Eval.Execute(action, new
+        if (_config.Modes == null || _config.Modes[State.Mode] == null)
         {
-            state,
-            deviceState = DeviceState,
-            keyClick,
-            keyPress,
-            keyRelease,
-        });
+            throw new Exception("No device configuration found for this mode");
+        }
+
+        return _config.Modes[State.Mode];
     }
+
+    protected abstract double ParseValue(TUpdate state);
 }

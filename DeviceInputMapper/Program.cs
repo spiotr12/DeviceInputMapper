@@ -17,7 +17,6 @@ class Program
         var config = deviceController.LoadConfig();
 
         var allTasks = new List<Task>();
-        var handlers = new List<object>();
 
         // var c1 = new Controller(UserIndex.One);
         // var c2 = new Controller(UserIndex.Two);
@@ -36,24 +35,23 @@ class Program
             var device = deviceController.FindByInstanceGuid(instanceGuid);
             if (device != null)
             {
+                if (deviceConfig.InputDeviceType == InputDeviceType.Gamepad)
+                {
+                }
+
                 if (deviceConfig.InputDeviceType == InputDeviceType.Joystick)
                 {
                     var joystick = new Joystick(directInput, instanceGuid);
                     var handler = new JoystickHandler(id, deviceConfig, joystick);
-                    handlers.Add(handler);
                     handler.EnableLogging = true;
                     allTasks.Add(handler.Run());
-                }
-
-                if (deviceConfig.InputDeviceType == InputDeviceType.Gamepad)
-                {
                 }
 
                 if (deviceConfig.InputDeviceType == InputDeviceType.Keyboard)
                 {
                     var keyboard = new SharpDX.DirectInput.Keyboard(directInput);
                     var handler = new KeyboardHandler(id, deviceConfig, keyboard);
-                    handlers.Add(handler);
+                    handler.EnableLogging = true;
                     allTasks.Add(handler.Run());
                 }
 
@@ -61,7 +59,6 @@ class Program
                 {
                     var mouse = new SharpDX.DirectInput.Mouse(directInput);
                     var handler = new MouseHandler(id, deviceConfig, mouse);
-                    handlers.Add(handler);
                     allTasks.Add(handler.Run());
                 }
             }

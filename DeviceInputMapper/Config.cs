@@ -43,7 +43,4 @@ public class InputConfig
 {
     [JsonProperty("condition")] public string Condition;
     [JsonProperty("action")] public string Action;
-
-
-    [JsonProperty("valueParser")] public string? ValueParser;
 }

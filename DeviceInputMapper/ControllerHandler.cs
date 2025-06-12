@@ -13,7 +13,7 @@ class ControllerHandler : JoystickHandler
         _joystick = joystick;
     }
 
-    protected override string GetKeyName(JoystickUpdate state)
+    protected override string GetButtonName(JoystickUpdate state)
     {
         return state.Offset.ToString();
     }

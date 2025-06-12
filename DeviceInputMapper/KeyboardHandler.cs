@@ -12,9 +12,13 @@ class KeyboardHandler : DirectInputHandler<KeyboardState, RawKeyboardState, Keyb
         _keyboard = keyboard;
     }
 
-    protected override string GetKeyName(KeyboardUpdate state)
+    protected override string GetButtonName(KeyboardUpdate state)
     {
-        throw new NotImplementedException();
+        return state.Key.ToString();
     }
 
+    protected override double ParseValue(KeyboardUpdate state)
+    {
+        return state.Value == 0 ? 0 : 1;
+    }
 }
