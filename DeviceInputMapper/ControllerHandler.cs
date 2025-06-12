@@ -36,6 +36,12 @@ class ControllerHandler
 
                 if (_previous != _controller.GetState().Gamepad.ToString())
                 {
+                    if (EnableLogging)
+                    {
+                        Console.WriteLine("{0} [{1}] ({2})", _config.InstanceName, _config.InputDeviceType, _id);
+                        Console.WriteLine("> {0}\n", _controller.GetState().Gamepad.ToString());
+                    }
+
                     if (!State.Devices.ContainsKey(_id))
                     {
                         State.Devices.Add(_id, ToDictionary());
@@ -45,9 +51,17 @@ class ControllerHandler
                         UpdateDictionary(State.Devices[_id]);
                     }
 
+                    if (EnableLogging)
+                    {
+                        Console.WriteLine(State.ToString());
+                    }
+
                     foreach (var button in Enum.GetValues(typeof(GamepadButtonFlags)).Cast<GamepadButtonFlags>())
                     {
-                        Handle(button.ToString(), State.Devices[_id][button.ToString()]);
+                        if (button != GamepadButtonFlags.None)
+                        {
+                            Handle(button.ToString(), State.Devices[_id][button.ToString()]);
+                        }
                     }
 
                     _previous = _controller.GetState().Gamepad.ToString();
@@ -86,7 +100,7 @@ class ControllerHandler
 
         var buttons = _controller.GetState().Gamepad.Buttons;
 
-        dic.Add("None", (buttons & GamepadButtonFlags.None) == GamepadButtonFlags.None ? 1 : (double)0);
+        // dic.Add("None", (buttons & GamepadButtonFlags.None) == GamepadButtonFlags.None ? 1 : (double)0);
         dic.Add("DPadUp", (buttons & GamepadButtonFlags.DPadUp) != GamepadButtonFlags.None ? 1 : (double)0);
         dic.Add("DPadDown", (buttons & GamepadButtonFlags.DPadDown) != GamepadButtonFlags.None ? 1 : (double)0);
         dic.Add("DPadLeft", (buttons & GamepadButtonFlags.DPadLeft) != GamepadButtonFlags.None ? 1 : (double)0);
@@ -102,12 +116,13 @@ class ControllerHandler
         dic.Add("X", (buttons & GamepadButtonFlags.X) != GamepadButtonFlags.None ? 1 : (double)0);
         dic.Add("Y", (buttons & GamepadButtonFlags.Y) != GamepadButtonFlags.None ? 1 : (double)0);
 
-        dic.Add("LeftThumbX", _controller.GetState().Gamepad.LeftThumbX); // TODO: Parse
-        dic.Add("LeftThumbY", _controller.GetState().Gamepad.LeftThumbY); // TODO: Parse
-        dic.Add("LeftTrigger", _controller.GetState().Gamepad.LeftTrigger); // TODO: Parse
-        dic.Add("RightThumbX", _controller.GetState().Gamepad.RightThumbX); // TODO: Parse
-        dic.Add("RightThumbY", _controller.GetState().Gamepad.RightThumbY); // TODO: Parse
-        dic.Add("RightTrigger", _controller.GetState().Gamepad.RightTrigger); // TODO: Parse
+        dic.Add("LeftThumbX", ParseThumbValue(_controller.GetState().Gamepad.LeftThumbX));
+        dic.Add("LeftThumbY", ParseThumbValue(_controller.GetState().Gamepad.LeftThumbY));
+        dic.Add("RightThumbX", ParseThumbValue(_controller.GetState().Gamepad.RightThumbX));
+        dic.Add("RightThumbY", ParseThumbValue(_controller.GetState().Gamepad.RightThumbY));
+
+        dic.Add("LeftTrigger", ParseTriggerValue(_controller.GetState().Gamepad.LeftTrigger));
+        dic.Add("RightTrigger", ParseTriggerValue(_controller.GetState().Gamepad.RightTrigger));
 
         return dic;
     }
@@ -116,7 +131,7 @@ class ControllerHandler
     {
         var buttons = _controller.GetState().Gamepad.Buttons;
 
-        dic["None"] = (buttons & GamepadButtonFlags.None) == GamepadButtonFlags.None ? 1 : (double)0;
+        // dic["None"] = (buttons & GamepadButtonFlags.None) == GamepadButtonFlags.None ? 1 : (double)0;
         dic["DPadUp"] = (buttons & GamepadButtonFlags.DPadUp) != GamepadButtonFlags.None ? 1 : (double)0;
         dic["DPadDown"] = (buttons & GamepadButtonFlags.DPadDown) != GamepadButtonFlags.None ? 1 : (double)0;
         dic["DPadLeft"] = (buttons & GamepadButtonFlags.DPadLeft) != GamepadButtonFlags.None ? 1 : (double)0;
@@ -132,11 +147,22 @@ class ControllerHandler
         dic["X"] = (buttons & GamepadButtonFlags.X) != GamepadButtonFlags.None ? 1 : (double)0;
         dic["Y"] = (buttons & GamepadButtonFlags.Y) != GamepadButtonFlags.None ? 1 : (double)0;
 
-        dic["LeftThumbX"] = _controller.GetState().Gamepad.LeftThumbX; // TODO: Parse
-        dic["LeftThumbY"] = _controller.GetState().Gamepad.LeftThumbY; // TODO: Parse
-        dic["LeftTrigger"] = _controller.GetState().Gamepad.LeftTrigger; // TODO: Parse
-        dic["RightThumbX"] = _controller.GetState().Gamepad.RightThumbX; // TODO: Parse
-        dic["RightThumbY"] = _controller.GetState().Gamepad.RightThumbY; // TODO: Parse
-        dic["RightTrigger"] = _controller.GetState().Gamepad.RightTrigger; // TODO: Parse
+        dic["LeftThumbX"] = ParseThumbValue(_controller.GetState().Gamepad.LeftThumbX);
+        dic["LeftThumbY"] = ParseThumbValue(_controller.GetState().Gamepad.LeftThumbY);
+        dic["RightThumbX"] = ParseThumbValue(_controller.GetState().Gamepad.RightThumbX);
+        dic["RightThumbY"] = ParseThumbValue(_controller.GetState().Gamepad.RightThumbY);
+
+        dic["LeftTrigger"] = ParseTriggerValue(_controller.GetState().Gamepad.LeftTrigger);
+        dic["RightTrigger"] = ParseTriggerValue(_controller.GetState().Gamepad.RightTrigger);
+    }
+
+    private double ParseThumbValue(short value)
+    {
+        return Math.Round(((double)value / 32767), 4);
+    }
+
+    private double ParseTriggerValue(byte value)
+    {
+        return Math.Round(((double)value / 255), 4);
     }
 }

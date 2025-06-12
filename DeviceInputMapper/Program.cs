@@ -76,6 +76,7 @@ class Program
                 {
                     var controller = new Controller(userIndex);
                     var handler = new ControllerHandler(id, deviceConfig, controller);
+                    handler.EnableLogging = true;
                     allTasks.Add(handler.Run());
                 }
             }
