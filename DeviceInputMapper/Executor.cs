@@ -54,8 +54,9 @@ public static class Executor
         var getButtonValue = (string button) => { return getButtonState(button).value; };
         var getButtonRawValue = (string button) => { return getButtonState(button).rawValue; };
 
-        var stateToString = () => State.ToString();
-        var deviceStateToString = () => State.DeviceToString(id);
+        var stateToString = () => State.DeviceToString(id);
+        var deviceStateToString = (string i) => State.DeviceToString(i);
+        var globalStateToString = () => State.ToString();
 
         var log = (object msg) => Console.WriteLine(msg.ToString());
 
@@ -79,16 +80,16 @@ public static class Executor
                 value,
                 rawValue,
                 mode = State.Mode,
-                state = State.Devices,
-                deviceState = State.GetDevice(id),
+                state = State.GetDevice(id),
+                globalState = State.Devices,
+
                 stateToString,
                 deviceStateToString,
+                globalStateToString,
 
-                // getDeviceState,
                 getDeviceButtonValue,
                 getDeviceButtonRawValue,
 
-                // getButtonState,
                 getButtonValue,
                 getButtonRawValue,
 
@@ -117,8 +118,9 @@ public static class Executor
         var keyStopAutoRepeat = (string key) => Keyboard.StopAutoRepeat(Enum.Parse<Keys>(key));
         var keyStopAllAutoRepeat = () => Keyboard.StopAllAutoRepeat();
 
-        var stateToString = () => State.ToString();
-        var deviceStateToString = () => State.DeviceToString(id);
+        var stateToString = () => State.DeviceToString(id);
+        var deviceStateToString = (string i) => State.DeviceToString(i);
+        var globalStateToString = () => State.ToString();
 
         var log = (object msg) => Console.WriteLine(msg.ToString());
 
@@ -130,10 +132,12 @@ public static class Executor
                 value,
                 rawValue,
                 mode = State.Mode,
-                state = State.Devices,
-                deviceState = State.GetDevice(id),
+                state = State.GetDevice(id),
+                globalState = State.Devices,
+
                 stateToString,
                 deviceStateToString,
+                globalStateToString,
 
                 keyClick,
                 keyPress,

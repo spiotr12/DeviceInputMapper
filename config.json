@@ -145,6 +145,11 @@
               "action": "log(stateToString())"
             }
           ],
+          "Buttons23": [
+            {
+              "action": "log(deviceStateToString(\"1169e780-cbbf-11ef-8002-444553540000\"))"
+            }
+          ],
           "Buttons20": [
             {
               "action": "keyStopAllAutoRepeat();"
