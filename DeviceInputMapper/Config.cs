@@ -64,7 +64,7 @@ public class DeviceConfig
 public class InputConfig
 {
     [JsonProperty("condition", NullValueHandling = NullValueHandling.Ignore)]
-    public string Condition;
+    public string? Condition;
 
     [JsonProperty("action", NullValueHandling = NullValueHandling.Ignore)]
     public string Action;

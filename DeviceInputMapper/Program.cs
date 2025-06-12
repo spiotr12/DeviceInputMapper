@@ -16,6 +16,8 @@ class Program
 
         var config = deviceController.LoadConfig();
 
+        var enableGlobalLogging = false;
+
         var allTasks = new List<Task>();
 
         // var c1 = new Controller(UserIndex.One);
@@ -43,7 +45,7 @@ class Program
                         {
                             var joystick = new Joystick(directInput, instanceGuid);
                             var handler = new JoystickHandler(id, deviceConfig, joystick);
-                            handler.EnableLogging = true;
+                            handler.EnableLogging = enableGlobalLogging;
                             allTasks.Add(handler.Run());
                         }
 
@@ -51,7 +53,7 @@ class Program
                         {
                             var keyboard = new SharpDX.DirectInput.Keyboard(directInput);
                             var handler = new KeyboardHandler(id, deviceConfig, keyboard);
-                            handler.EnableLogging = true;
+                            handler.EnableLogging = enableGlobalLogging;
                             allTasks.Add(handler.Run());
                         }
 
@@ -59,6 +61,7 @@ class Program
                         {
                             var mouse = new SharpDX.DirectInput.Mouse(directInput);
                             var handler = new MouseHandler(id, deviceConfig, mouse);
+                            handler.EnableLogging = enableGlobalLogging;
                             allTasks.Add(handler.Run());
                         }
                     }
@@ -76,7 +79,7 @@ class Program
                 {
                     var controller = new Controller(userIndex);
                     var handler = new ControllerHandler(id, deviceConfig, controller);
-                    handler.EnableLogging = true;
+                    handler.EnableLogging = enableGlobalLogging;
                     allTasks.Add(handler.Run());
                 }
             }

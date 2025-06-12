@@ -90,7 +90,7 @@ class ControllerHandler
         }, new CancellationToken());
     }
 
-    private void Handle(string button, double value, double rawValue)
+    private void Handle(string button, double value, object rawValue)
     {
         if (GetCurrentModeConfig().TryGetValue(button, out var commands))
         {
@@ -98,7 +98,7 @@ class ControllerHandler
             {
                 if (Executor.ParseCondition(command.Condition, _id, value, rawValue))
                 {
-                    Executor.ParseAction(command.Action, _id);
+                    Executor.ParseAction(command.Action, _id, value, rawValue);
                 }
             }
         }
@@ -114,9 +114,9 @@ class ControllerHandler
         return _config.Modes[State.Mode];
     }
 
-    private IDictionary<string, (double value, double rawValue)> ToDictionary()
+    private IDictionary<string, (double value, object rawValue)> ToDictionary()
     {
-        var dic = new Dictionary<string, (double value, double rawValue)>();
+        var dic = new Dictionary<string, (double value, object rawValue)>();
 
         var buttons = _controller.GetState().Gamepad.Buttons;
 
@@ -207,7 +207,7 @@ class ControllerHandler
         return dic;
     }
 
-    private void UpdateDictionary(IDictionary<string, (double value, double rawValue)> dic)
+    private void UpdateDictionary(IDictionary<string, (double value, object rawValue)> dic)
     {
         var buttons = _controller.GetState().Gamepad.Buttons;
 

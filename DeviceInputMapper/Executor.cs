@@ -4,7 +4,7 @@ namespace DeviceInputMapper;
 
 public static class Executor
 {
-    public static bool ParseCondition(string condition, string id, double value, double rawValue)
+    public static bool ParseCondition(string? condition, string id, double value, object rawValue)
     {
         var getDeviceState = (string id) =>
         {
@@ -13,49 +13,91 @@ public static class Executor
                 return value;
             }
 
-            return new Dictionary<string, (double value, double rawValue)>();
+            return new Dictionary<string, (double value, object rawValue)>();
         };
 
-        var getDeviceButtonValue = (string id, string button) =>
+        var getDeviceButtonState = (string id, string button) =>
         {
             if (State.Devices.TryGetValue(id, out var st))
             {
-                if (st.TryGetValue(button, out var value))
+                if (st.TryGetValue(button, out var stateValue))
                 {
-                    return value;
+                    return new
+                    {
+                        value = stateValue.value,
+                        rawValue = (object)stateValue.rawValue,
+                    };
                 }
             }
 
-            return (value: double.NaN, rawValue: double.NaN);
+            return new { value = double.NaN, rawValue = (object)double.NaN };
         };
+
+        var getDeviceButtonValue = (string id, string button) => { return getDeviceButtonState(id, button).value; };
+        var getDeviceButtonRawValue = (string id, string button) => { return getDeviceButtonState(id, button).rawValue; };
 
         State.Devices.TryGetValue(id, out var state);
-        var getButtonValue = (string button) =>
+        var getButtonState = (string button) =>
         {
-            if (state != null && state.TryGetValue(button, out var value))
+            if (state != null && state.TryGetValue(button, out var stateValue))
             {
-                return value;
+                return new
+                {
+                    value = stateValue.value,
+                    rawValue = (object)stateValue.rawValue,
+                };
             }
 
-            return (value: double.NaN, rawValue: double.NaN);
+            return new { value = double.NaN, rawValue = (object)double.NaN };
         };
 
-        var log = (string msg) => Console.WriteLine(msg.ToString());
+        var getButtonValue = (string button) => { return getButtonState(button).value; };
+        var getButtonRawValue = (string button) => { return getButtonState(button).rawValue; };
 
-        return Eval.Execute<bool>(condition, new
+
+        var log = (object msg) => Console.WriteLine(msg.ToString());
+
+        var test = () =>
         {
-            value,
-            rawValue,
+            Console.WriteLine("TESTING");
+            Console.WriteLine(getButtonState("Buttons9"));
+            return true;
+        };
 
-            getDeviceState,
-            getDeviceButtonValue,
-            getButtonValue,
+        if (condition == null || condition.ToLower().Equals("true"))
+        {
+            return true;
+        }
 
-            log,
-        });
+        try
+        {
+            return Eval.Execute<bool>(condition, new
+            {
+                id,
+                value,
+                rawValue,
+
+                getDeviceState,
+                getDeviceButtonValue,
+                getDeviceButtonRawValue,
+
+                getButtonState,
+                getButtonValue,
+                getButtonRawValue,
+
+                log,
+                test,
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return false;
     }
 
-    public static void ParseAction(string action, string id)
+    public static void ParseAction(string action, string id, double value, object rawValue)
     {
         var keyClick = Keyboard.Click;
         var keyPress = Keyboard.Press;
@@ -63,19 +105,30 @@ public static class Executor
         var keyAutoRepeat = Keyboard.AutoRepeat;
         var keyStopAutoRepeat = Keyboard.StopAutoRepeat;
         var keyStopAllAutoRepeat = Keyboard.StopAllAutoRepeat;
-        var log = (string msg) => Console.WriteLine(msg.ToString());
+        var log = (object msg) => Console.WriteLine(msg.ToString());
 
-        Eval.Execute(action, new
+        try
         {
-            keyClick,
-            keyPress,
-            keyRelease,
+            Eval.Execute(action, new
+            {
+                id,
+                value,
+                rawValue,
 
-            keyAutoRepeat,
-            keyStopAutoRepeat,
-            keyStopAllAutoRepeat,
+                keyClick,
+                keyPress,
+                keyRelease,
 
-            log,
-        });
+                keyAutoRepeat,
+                keyStopAutoRepeat,
+                keyStopAllAutoRepeat,
+
+                log,
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 }

@@ -60,6 +60,12 @@
               "condition": "value == 1 && getDeviceButtonValue(\"116af8f0-cbbf-11ef-800e-444553540000\", \"LeftShift\") == 1",
               "action": "keyClick(Keys.P)"
             }
+          ],
+          "Buttons9": [
+            {
+              "condition": "getButtonRawValue(\"Buttons9\") == 128",
+              "action": "log(\"Working\")"
+            }
           ]
         }
       },

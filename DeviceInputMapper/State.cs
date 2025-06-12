@@ -2,7 +2,7 @@
 
 public static class State
 {
-    public static readonly IDictionary<string, IDictionary<string, (double value, double rawValue)>> Devices = new Dictionary<string, IDictionary<string, (double value, double rawValue)>>();
+    public static readonly IDictionary<string, IDictionary<string, (double value, object rawValue)>> Devices = new Dictionary<string, IDictionary<string, (double value, object rawValue)>>();
     public static string Mode { get; set; } = "Default";
 
     public static string ToString()

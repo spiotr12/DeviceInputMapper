@@ -52,7 +52,7 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
 
                     if (!State.Devices.ContainsKey(_id))
                     {
-                        State.Devices.Add(_id, new Dictionary<string, (double value, double rawValue)>());
+                        State.Devices.Add(_id, new Dictionary<string, (double value, object rawValue)>());
                     }
 
                     if (!State.Devices[_id].ContainsKey(button))
@@ -73,7 +73,7 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
         }, new CancellationToken());
     }
 
-    protected virtual void Handle(TUpdate state, string button, double value, double rawValue)
+    protected virtual void Handle(TUpdate state, string button, double value, object rawValue)
     {
         if (GetCurrentModeConfig().TryGetValue(button, out var commands))
         {
@@ -81,7 +81,7 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
             {
                 if (Executor.ParseCondition(command.Condition, _id, value, rawValue))
                 {
-                    Executor.ParseAction(command.Action, _id);
+                    Executor.ParseAction(command.Action, _id, value, rawValue);
                 }
             }
         }
