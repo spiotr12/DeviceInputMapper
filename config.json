@@ -47,6 +47,44 @@
               "action": "keyStopAutoRepeat(\"A\"); keyStopAutoRepeat(\"D\");"
             }
           ],
+          "RotationY": [
+            {
+              "condition": "value < 0",
+              "action": "keyAutoRepeat(\"B\", delay);"
+            },
+            {
+              "condition": "value > 0",
+              "action": "keyAutoRepeat(\"N\", delay);"
+            },
+            {
+              "condition": "value == 0",
+              "action": "keyAutoRepeat(\"B\"); keyAutoRepeat(\"N\");"
+            }
+          ],
+          "Buttons14": [
+            {
+              "condition": "value == 1",
+              "action": "keyDynamicAutoRepeat(\"Y\", 300);"
+            }
+          ],
+          "Buttons15": [
+            {
+              "condition": "value == 1",
+              "action": "keyDynamicAutoRepeat(\"Y\", 100);"
+            }
+          ],
+          "Buttons16": [
+            {
+              "condition": "value == 1",
+              "action": "keyDynamicAutoRepeat(\"H\", 500);"
+            }
+          ],
+          "Buttons17": [
+            {
+              "condition": "value == 1",
+              "action": "keyDynamicAutoRepeat(\"H\", 2000);"
+            }
+          ],
           "Buttons0": [
             {
               "condition": "value == 1",
@@ -109,7 +147,7 @@
           ],
           "Buttons20": [
             {
-              "action": "log(\"Running\"); keyStopAllAutoRepeat(); log(\"Working\")"
+              "action": "keyStopAllAutoRepeat();"
             }
           ]
         }
