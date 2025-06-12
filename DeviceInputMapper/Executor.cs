@@ -36,10 +36,10 @@ public static class Executor
         var getDeviceButtonValue = (string id, string button) => { return getDeviceButtonState(id, button).value; };
         var getDeviceButtonRawValue = (string id, string button) => { return getDeviceButtonState(id, button).rawValue; };
 
-        State.Devices.TryGetValue(id, out var state);
+        State.Devices.TryGetValue(id, out var deviceState);
         var getButtonState = (string button) =>
         {
-            if (state != null && state.TryGetValue(button, out var stateValue))
+            if (deviceState != null && deviceState.TryGetValue(button, out var stateValue))
             {
                 return new
                 {
@@ -54,6 +54,8 @@ public static class Executor
         var getButtonValue = (string button) => { return getButtonState(button).value; };
         var getButtonRawValue = (string button) => { return getButtonState(button).rawValue; };
 
+        var stateToString = () => State.ToString();
+        var deviceStateToString = () => State.DeviceToString(id);
 
         var log = (object msg) => Console.WriteLine(msg.ToString());
 
@@ -76,6 +78,11 @@ public static class Executor
                 id,
                 value,
                 rawValue,
+                mode = State.Mode,
+                state = State.Devices,
+                deviceState = State.GetDevice(id),
+                stateToString,
+                deviceStateToString,
 
                 // getDeviceState,
                 getDeviceButtonValue,
@@ -99,6 +106,8 @@ public static class Executor
 
     public static void ParseAction(string action, string id, double value, object rawValue)
     {
+        State.Devices.TryGetValue(id, out var deviceState);
+
         var keyClick = (string key) => Keyboard.Click(Enum.Parse<Keys>(key));
         var keyPress = (string key) => Keyboard.Press(Enum.Parse<Keys>(key));
         var keyRelease = (string key) => Keyboard.Release(Enum.Parse<Keys>(key));
@@ -106,6 +115,9 @@ public static class Executor
         var keyAutoRepeat = (string key, int delay) => Keyboard.AutoRepeat(Enum.Parse<Keys>(key), delay);
         var keyStopAutoRepeat = (string key) => Keyboard.StopAutoRepeat(Enum.Parse<Keys>(key));
         var keyStopAllAutoRepeat = () => Keyboard.StopAllAutoRepeat();
+
+        var stateToString = () => State.ToString();
+        var deviceStateToString = () => State.DeviceToString(id);
 
         var log = (object msg) => Console.WriteLine(msg.ToString());
 
@@ -116,6 +128,11 @@ public static class Executor
                 id,
                 value,
                 rawValue,
+                mode = State.Mode,
+                state = State.Devices,
+                deviceState = State.GetDevice(id),
+                stateToString,
+                deviceStateToString,
 
                 keyClick,
                 keyPress,

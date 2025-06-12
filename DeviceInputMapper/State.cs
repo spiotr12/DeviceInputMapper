@@ -2,12 +2,13 @@
 
 public static class State
 {
-    public static readonly IDictionary<string, IDictionary<string, (double value, object rawValue)>> Devices = new Dictionary<string, IDictionary<string, (double value, object rawValue)>>();
+    public static readonly IDictionary<string, IDictionary<string, (double value, object rawValue)>> Devices =
+        new Dictionary<string, IDictionary<string, (double value, object rawValue)>>();
+
     public static string Mode { get; set; } = "Default";
 
     public static string ToString()
     {
-
         var str = String.Format("Mode: {0}\n", Mode);
         foreach (var (id, buttons) in Devices)
         {
@@ -15,10 +16,28 @@ public static class State
 
             foreach (var (key, value) in buttons)
             {
-                str += String.Format("  key: {0}, value: {1}\n", key, value);
+                str += String.Format("  key: \"{0}\", value: {1}, rawValue: {2}\n", key, value.value, value.rawValue);
             }
         }
 
         return str;
+    }
+
+    public static string DeviceToString(string id)
+    {
+        var str = "";
+        Devices.TryGetValue(id, out var deviceState);
+        foreach (var (key, value) in deviceState)
+        {
+            str += String.Format("  key: \"{0}\", value: {1}, rawValue: {2}\n", key, value.value, value.rawValue);
+        }
+
+        return str;
+    }
+
+    public static object? GetDevice(string id)
+    {
+        Devices.TryGetValue(id, out var deviceState);
+        return deviceState;
     }
 }

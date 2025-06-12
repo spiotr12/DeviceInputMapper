@@ -61,10 +61,41 @@
               "action": "keyClick(\"P\")"
             }
           ],
+          "Buttons6": [
+            {
+              "condition": "value == 1",
+              "action": "log(\"Running\"); keyAutoRepeat(\"P\", 1000); log(\"Working\")"
+            },
+            {
+              "condition": "value == 0",
+              "action": "log(\"Running\"); keyStopAutoRepeat(\"P\"); log(\"Working\")"
+            }
+          ],
+          "Buttons8": [
+            {
+              "condition": "value == 1",
+              "action": "log(\"Running\"); keyAutoRepeat(\"X\", 1000); log(\"Working\")"
+            }
+          ],
           "Buttons9": [
             {
-              "condition": "true",
-              "action": "log(\"Running\"); keyClick(P); log(\"Working\")"
+              "condition": "value == 1",
+              "action": "log(\"Running\"); keyAutoRepeat(\"Y\", 1000); log(\"Working\")"
+            }
+          ],
+          "Buttons18": [
+            {
+              "action": "log(deviceStateToString())"
+            }
+          ],
+          "Buttons19": [
+            {
+              "action": "log(stateToString())"
+            }
+          ],
+          "Buttons20": [
+            {
+              "action": "log(\"Running\"); keyStopAllAutoRepeat(); log(\"Working\")"
             }
           ]
         }

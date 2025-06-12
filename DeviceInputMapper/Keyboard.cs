@@ -50,7 +50,7 @@ public class Keyboard
             Console.WriteLine("Start autorepeat for {0} with {1}ms delay", key, delay);
             while (!cancellationTokenSource.IsCancellationRequested)
             {
-                keybd_event((byte)key, 0, KEY_UP_EVENT, 0);
+                keybd_event((byte)key, 0, KEY_DOWN_EVENT, 0);
                 Thread.Sleep(delay);
             }
         }, cancellationTokenSource.Token);
