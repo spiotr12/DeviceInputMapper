@@ -47,38 +47,39 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
 
                     // Update global state
                     var button = GetButtonName(state);
+                    var rawValue = state.Value;
                     var value = ParseValue(state);
 
                     if (!State.Devices.ContainsKey(_id))
                     {
-                        State.Devices.Add(_id, new Dictionary<string, double>());
+                        State.Devices.Add(_id, new Dictionary<string, (double value, double rawValue)>());
                     }
 
                     if (!State.Devices[_id].ContainsKey(button))
                     {
-                        State.Devices[_id].Add(button, value);
+                        State.Devices[_id].Add(button, (value, rawValue));
                     }
 
-                    State.Devices[_id][button] = value;
+                    State.Devices[_id][button] = (value, rawValue);
 
                     if (EnableLogging)
                     {
                         Console.WriteLine(State.ToString());
                     }
 
-                    Handle(state, button, value);
+                    Handle(state, button, value, rawValue);
                 }
             }
         }, new CancellationToken());
     }
 
-    protected virtual void Handle(TUpdate state, string button, double value)
+    protected virtual void Handle(TUpdate state, string button, double value, double rawValue)
     {
         if (GetCurrentModeConfig().TryGetValue(button, out var commands))
         {
             foreach (var command in commands)
             {
-                if (Executor.ParseCondition(command.Condition, _id, value))
+                if (Executor.ParseCondition(command.Condition, _id, value, rawValue))
                 {
                     Executor.ParseAction(command.Action, _id);
                 }

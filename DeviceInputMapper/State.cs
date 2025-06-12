@@ -2,11 +2,12 @@
 
 public static class State
 {
-    public static readonly IDictionary<string, IDictionary<string, double>> Devices = new Dictionary<string, IDictionary<string, double>>();
+    public static readonly IDictionary<string, IDictionary<string, (double value, double rawValue)>> Devices = new Dictionary<string, IDictionary<string, (double value, double rawValue)>>();
     public static string Mode { get; set; } = "Default";
 
     public static string ToString()
     {
+
         var str = String.Format("Mode: {0}\n", Mode);
         foreach (var (id, buttons) in Devices)
         {
