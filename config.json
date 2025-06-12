@@ -7,64 +7,64 @@
           "X": [
             {
               "condition": "value < 0",
-              "action": "keyRelease(Keys.D); keyPress(Keys.A)"
+              "action": "keyRelease(\"D\"); keyPress(\"A\")"
             },
             {
               "condition": "value > 0",
-              "action": "keyRelease(Keys.A); keyPress(Keys.D)"
+              "action": "keyRelease(\"A\"); keyPress(\"D\")"
             },
             {
               "condition": "value == 0",
-              "action": "keyRelease(Keys.A); keyRelease(Keys.D)"
+              "action": "keyRelease(\"A\"); keyRelease(\"D\")"
             }
           ],
           "Y": [
             {
               "condition": "value < 0",
-              "action": "keyRelease(Keys.S); keyPress(Keys.W)"
+              "action": "keyRelease(\"S\"); keyPress(\"W\")"
             },
             {
               "condition": "value > 0",
-              "action": "keyRelease(Keys.W); keyPress(Keys.S)"
+              "action": "keyRelease(\"W\"); keyPress(\"S\")"
             },
             {
               "condition": "value == 0",
-              "action": "keyRelease(Keys.W); keyRelease(Keys.S)"
+              "action": "keyRelease(\"W\"); keyRelease(\"S\")"
             }
           ],
           "Z": [],
           "Buttons0": [
             {
               "condition": "value == 1",
-              "action": "keyClick(Keys.D1);"
+              "action": "keyClick(\"D\");"
             }
           ],
           "Buttons1": [
             {
               "condition": "value == 1",
-              "action": "keyPress(Keys.B)"
+              "action": "keyPress(\"B\")"
             },
             {
               "condition": "value == 0",
-              "action": "keyRelease(Keys.B)"
+              "action": "keyRelease(\"B\")"
             }
           ],
           "Buttons2": [
             {
               "condition": "value == 1 && getButtonValue(\"Buttons3\") == 1",
-              "action": "keyClick(Keys.P)"
+              "action": "keyClick(\"P\")"
             }
           ],
           "Buttons5": [
             {
               "condition": "value == 1 && getDeviceButtonValue(\"116af8f0-cbbf-11ef-800e-444553540000\", \"LeftShift\") == 1",
-              "action": "keyClick(Keys.P)"
+              "action": "keyClick(\"P\")"
             }
           ],
           "Buttons9": [
             {
-              "condition": "getButtonRawValue(\"Buttons9\") == 128",
-              "action": "log(\"Working\")"
+              "condition": "true",
+              "action": "log(\"Running\"); keyClick(P); log(\"Working\")"
             }
           ]
         }
@@ -121,7 +121,7 @@
           "A": [
             {
               "condition": "value == 1",
-              "action": "keyClick(Keys.A)"
+              "action": "keyClick(\"A\")"
             }
           ]
         }

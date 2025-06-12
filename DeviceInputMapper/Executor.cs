@@ -77,11 +77,11 @@ public static class Executor
                 value,
                 rawValue,
 
-                getDeviceState,
+                // getDeviceState,
                 getDeviceButtonValue,
                 getDeviceButtonRawValue,
 
-                getButtonState,
+                // getButtonState,
                 getButtonValue,
                 getButtonRawValue,
 
@@ -99,12 +99,14 @@ public static class Executor
 
     public static void ParseAction(string action, string id, double value, object rawValue)
     {
-        var keyClick = Keyboard.Click;
-        var keyPress = Keyboard.Press;
-        var keyRelease = Keyboard.Release;
-        var keyAutoRepeat = Keyboard.AutoRepeat;
-        var keyStopAutoRepeat = Keyboard.StopAutoRepeat;
-        var keyStopAllAutoRepeat = Keyboard.StopAllAutoRepeat;
+        var keyClick = (string key) => Keyboard.Click(Enum.Parse<Keys>(key));
+        var keyPress = (string key) => Keyboard.Press(Enum.Parse<Keys>(key));
+        var keyRelease = (string key) => Keyboard.Release(Enum.Parse<Keys>(key));
+
+        var keyAutoRepeat = (string key, int delay) => Keyboard.AutoRepeat(Enum.Parse<Keys>(key), delay);
+        var keyStopAutoRepeat = (string key) => Keyboard.StopAutoRepeat(Enum.Parse<Keys>(key));
+        var keyStopAllAutoRepeat = () => Keyboard.StopAllAutoRepeat();
+
         var log = (object msg) => Console.WriteLine(msg.ToString());
 
         try
