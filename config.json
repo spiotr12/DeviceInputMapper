@@ -33,6 +33,20 @@
             }
           ],
           "Z": [],
+          "RotationX": [
+            {
+              "condition": "value < 0",
+              "action": "var delay = Math.Round(1000 * (1 - Math.Abs(value))); keyDynamicAutoRepeat(\"A\", delay);"
+            },
+            {
+              "condition": "value > 0",
+              "action": "var delay = Math.Round(1000 * (1 - Math.Abs(value))); keyDynamicAutoRepeat(\"D\", delay);"
+            },
+            {
+              "condition": "value == 0",
+              "action": "keyStopAutoRepeat(\"A\"); keyStopAutoRepeat(\"D\");"
+            }
+          ],
           "Buttons0": [
             {
               "condition": "value == 1",

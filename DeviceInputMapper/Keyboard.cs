@@ -28,40 +28,88 @@ public class Keyboard
         keybd_event((byte)key, 0, KEY_UP_EVENT, 0);
     }
 
-    private static IDictionary<string, CancellationTokenSource> _autoRepeatState = new Dictionary<string, CancellationTokenSource>();
+    private static IDictionary<string, AutoRepeatState> _autoRepeatState = new Dictionary<string, AutoRepeatState>();
+
+    private static int _stateTest = 0;
 
     public static void AutoRepeat(Keys key, int delay)
     {
         if (_autoRepeatState.ContainsKey(key.ToString()))
         {
-            Console.WriteLine("Cancel autorepeat for {0}", key);
-            _autoRepeatState[key.ToString()].Cancel();
+            _autoRepeatState[key.ToString()].CancellationTokenSource.Cancel();
             _autoRepeatState.Remove(key.ToString());
         }
 
-        var cancellationTokenSource = new CancellationTokenSource();
-        if (!_autoRepeatState.TryAdd(key.ToString(), cancellationTokenSource))
+        var state = new AutoRepeatState
         {
-            _autoRepeatState[key.ToString()] = cancellationTokenSource;
+            CancellationTokenSource = new CancellationTokenSource(),
+            Delay = delay
+        };
+        if (!_autoRepeatState.TryAdd(key.ToString(), state))
+        {
+            _autoRepeatState[key.ToString()] = state;
+        }
+        else
+        {
+            keybd_event((byte)key, 0, KEY_DOWN_EVENT, 0);
+            Thread.Sleep(state.Delay);
         }
 
         Task.Run(() =>
         {
-            Console.WriteLine("Start autorepeat for {0} with {1}ms delay", key, delay);
-            while (!cancellationTokenSource.IsCancellationRequested)
+            while (_autoRepeatState.TryGetValue(key.ToString(), out var latestState)
+                   && !latestState.CancellationTokenSource.IsCancellationRequested)
             {
                 keybd_event((byte)key, 0, KEY_DOWN_EVENT, 0);
-                Thread.Sleep(delay);
+                Thread.Sleep(latestState.Delay);
             }
-        }, cancellationTokenSource.Token);
+        }, state.CancellationTokenSource.Token);
+    }
+
+    public static void DynamicAutoRepeat(Keys key, int delay)
+    {
+        AutoRepeatState state;
+        if (_autoRepeatState.ContainsKey(key.ToString()))
+        {
+            state = _autoRepeatState[key.ToString()];
+            // Console.WriteLine("Current State {0}", state.Delay);
+            state.Delay = delay;
+            Console.WriteLine("State test: {0}", _stateTest++);
+        }
+        else
+        {
+            Console.WriteLine("State test: {0}", _stateTest++);
+            state = new AutoRepeatState
+            {
+                CancellationTokenSource = new CancellationTokenSource(),
+                Delay = delay
+            };
+            _autoRepeatState.Add(key.ToString(), state);
+
+            keybd_event((byte)key, 0, KEY_DOWN_EVENT, 0);
+            Thread.Sleep(state.Delay);
+
+            Task.Run(() =>
+            {
+                AutoRepeatState latestState;
+                while (_autoRepeatState.TryGetValue(key.ToString(), out latestState)
+                       && !latestState.CancellationTokenSource.IsCancellationRequested)
+                {
+                    Console.WriteLine("CHECK: {0}", _stateTest);
+                    keybd_event((byte)key, 0, KEY_DOWN_EVENT, 0);
+                    _autoRepeatState.TryGetValue(key.ToString(), out latestState);
+                    Console.WriteLine(latestState.Delay);
+                    Thread.Sleep(latestState.Delay);
+                }
+            }, state.CancellationTokenSource.Token);
+        }
     }
 
     public static void StopAutoRepeat(Keys key)
     {
         if (_autoRepeatState.ContainsKey(key.ToString()))
         {
-            Console.WriteLine("Cancel autorepeat for {0}", key);
-            _autoRepeatState[key.ToString()].Cancel();
+            _autoRepeatState[key.ToString()].CancellationTokenSource.Cancel();
             _autoRepeatState.Remove(key.ToString());
         }
     }
@@ -70,10 +118,16 @@ public class Keyboard
     {
         foreach (var (key, cancellationTokenSource) in _autoRepeatState)
         {
-            cancellationTokenSource.Cancel();
+            cancellationTokenSource.CancellationTokenSource.Cancel();
             _autoRepeatState.Remove(key);
         }
 
         _autoRepeatState.Clear();
     }
+}
+
+public struct AutoRepeatState
+{
+    public CancellationTokenSource CancellationTokenSource { get; set; }
+    public int Delay { get; set; }
 }

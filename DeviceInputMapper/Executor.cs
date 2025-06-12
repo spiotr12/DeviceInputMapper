@@ -113,6 +113,7 @@ public static class Executor
         var keyRelease = (string key) => Keyboard.Release(Enum.Parse<Keys>(key));
 
         var keyAutoRepeat = (string key, int delay) => Keyboard.AutoRepeat(Enum.Parse<Keys>(key), delay);
+        var keyDynamicAutoRepeat = (string key, int delay) => Keyboard.DynamicAutoRepeat(Enum.Parse<Keys>(key), delay);
         var keyStopAutoRepeat = (string key) => Keyboard.StopAutoRepeat(Enum.Parse<Keys>(key));
         var keyStopAllAutoRepeat = () => Keyboard.StopAllAutoRepeat();
 
@@ -139,6 +140,7 @@ public static class Executor
                 keyRelease,
 
                 keyAutoRepeat,
+                keyDynamicAutoRepeat,
                 keyStopAutoRepeat,
                 keyStopAllAutoRepeat,
 

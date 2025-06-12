@@ -8,6 +8,10 @@ class Program
     [STAThread]
     static async Task Main(string[] args)
     {
+        Thread.CurrentThread.Name = "Main";
+
+
+
         var directInput = new DirectInput();
         var configFilePath = "C:\\Projects\\DeviceInputMapper\\config.json";
 
