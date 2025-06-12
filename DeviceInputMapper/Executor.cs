@@ -1,9 +1,12 @@
-﻿using Z.Expressions;
+﻿using System.Dynamic;
+using Z.Expressions;
 
 namespace DeviceInputMapper;
 
 public static class Executor
 {
+    private static readonly IDictionary<string, object> _dynamicState = new Dictionary<string, object>();
+
     public static bool ParseCondition(string? condition, string id, double value, object rawValue)
     {
         var getDeviceState = (string id) =>
@@ -58,7 +61,32 @@ public static class Executor
         var deviceStateToString = (string i) => State.DeviceToString(i);
         var globalStateToString = () => State.ToString();
 
-        var log = (object msg) => Console.WriteLine(msg.ToString());
+
+        var getDynamicStateValue = (string key) =>
+        {
+            try
+            {
+                return _dynamicState[key];
+            }
+            catch (Exception e)
+            {
+            }
+
+            return null;
+        };
+        var setDynamicStateValue = (string key, object value) =>
+        {
+            if (_dynamicState.TryGetValue("myVar", out var myVar))
+            {
+                _dynamicState["myVar"] = value;
+            }
+            else
+            {
+                _dynamicState.Add("myVar", value);
+            }
+        };
+
+        var log = (object msg) => Console.WriteLine(msg);
 
         var test = () =>
         {
@@ -82,6 +110,9 @@ public static class Executor
                 mode = State.Mode,
                 state = State.GetDevice(id),
                 globalState = State.Devices,
+
+                getDynamicStateValue,
+                setDynamicStateValue,
 
                 stateToString,
                 deviceStateToString,
@@ -122,7 +153,31 @@ public static class Executor
         var deviceStateToString = (string i) => State.DeviceToString(i);
         var globalStateToString = () => State.ToString();
 
-        var log = (object msg) => Console.WriteLine(msg.ToString());
+        var getDynamicStateValue = (string key) =>
+        {
+            try
+            {
+                return _dynamicState[key];
+            }
+            catch (Exception e)
+            {
+            }
+
+            return null;
+        };
+        var setDynamicStateValue = (string key, object value) =>
+        {
+            if (_dynamicState.TryGetValue("myVar", out var myVar))
+            {
+                _dynamicState["myVar"] = value;
+            }
+            else
+            {
+                _dynamicState.Add("myVar", value);
+            }
+        };
+
+        var log = (object msg) => Console.WriteLine(msg);
 
         try
         {
@@ -134,6 +189,9 @@ public static class Executor
                 mode = State.Mode,
                 state = State.GetDevice(id),
                 globalState = State.Devices,
+
+                getDynamicStateValue,
+                setDynamicStateValue,
 
                 stateToString,
                 deviceStateToString,
