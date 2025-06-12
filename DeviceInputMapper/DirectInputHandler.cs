@@ -10,8 +10,6 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
 {
     public bool EnableLogging { get; set; }
 
-    public IDictionary<string, TUpdate> DeviceState { get; }
-
     private readonly string _id;
     protected readonly DeviceConfig _config;
     protected readonly CustomDevice<T, TRaw, TUpdate> _device;
@@ -21,8 +19,6 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
         _id = id;
         _config = config;
         _device = device;
-
-        DeviceState = new Dictionary<string, TUpdate>();
 
         _device.Properties.BufferSize = 128;
         _device.Acquire();

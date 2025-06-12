@@ -108,6 +108,19 @@
       "_subtype": 256,
       "_usage": "HapticsSimpleController",
       "_usagePage": "Consumer"
+    },
+    "One": {
+      "modes": {
+        "Default": {
+          "A": [
+            {
+              "condition": "value == 1",
+              "action": "keyClick(Keys.A)"
+            }
+          ]
+        }
+      },
+      "inputDeviceType": "controller"
     }
   }
 }

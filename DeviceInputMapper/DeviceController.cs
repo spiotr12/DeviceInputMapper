@@ -28,12 +28,19 @@ public class DeviceController
         var mapperConfiguration = new MapperConfiguration(cfg => cfg.CreateMap<DeviceInstance, DeviceConfig>());
         var mapper = mapperConfiguration.CreateMapper();
 
-        foreach (var (instanceGuid, deviceConfig) in deserializeConfig.Devices)
+        foreach (var (id, deviceConfig) in deserializeConfig.Devices)
         {
-            var device = FindByInstanceGuid(Guid.Parse(instanceGuid));
-            if (device != null)
+            try
             {
-                mapper.Map(device, deviceConfig);
+                var device = FindByInstanceGuid(Guid.Parse(id));
+                if (device != null)
+                {
+                    mapper.Map(device, deviceConfig);
+                }
+            }
+            catch (Exception e)
+            {
+                // ignore
             }
 
             if (deviceConfig.Modes == null || deviceConfig.Modes.Count == 0)

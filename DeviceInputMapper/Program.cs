@@ -31,36 +31,57 @@ class Program
 
         foreach (var (id, deviceConfig) in config.Devices)
         {
-            var instanceGuid = Guid.Parse(id);
-            var device = deviceController.FindByInstanceGuid(instanceGuid);
-            if (device != null)
+            // DirectInputDevices
+            try
             {
-                if (deviceConfig.InputDeviceType == InputDeviceType.Gamepad)
+                if (Guid.TryParse(id, out var instanceGuid))
                 {
-                }
+                    var device = deviceController.FindByInstanceGuid(instanceGuid);
+                    if (device != null)
+                    {
+                        if (deviceConfig.InputDeviceType == InputDeviceType.Joystick)
+                        {
+                            var joystick = new Joystick(directInput, instanceGuid);
+                            var handler = new JoystickHandler(id, deviceConfig, joystick);
+                            handler.EnableLogging = true;
+                            allTasks.Add(handler.Run());
+                        }
 
-                if (deviceConfig.InputDeviceType == InputDeviceType.Joystick)
+                        if (deviceConfig.InputDeviceType == InputDeviceType.Keyboard)
+                        {
+                            var keyboard = new SharpDX.DirectInput.Keyboard(directInput);
+                            var handler = new KeyboardHandler(id, deviceConfig, keyboard);
+                            handler.EnableLogging = true;
+                            allTasks.Add(handler.Run());
+                        }
+
+                        if (deviceConfig.InputDeviceType == InputDeviceType.Mouse)
+                        {
+                            var mouse = new SharpDX.DirectInput.Mouse(directInput);
+                            var handler = new MouseHandler(id, deviceConfig, mouse);
+                            allTasks.Add(handler.Run());
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+
+            // Controllers
+            try
+            {
+                if (Enum.TryParse<UserIndex>(id, out UserIndex userIndex))
                 {
-                    var joystick = new Joystick(directInput, instanceGuid);
-                    var handler = new JoystickHandler(id, deviceConfig, joystick);
-                    handler.EnableLogging = true;
+                    var controller = new Controller(userIndex);
+                    var handler = new ControllerHandler(id, deviceConfig, controller);
                     allTasks.Add(handler.Run());
                 }
-
-                if (deviceConfig.InputDeviceType == InputDeviceType.Keyboard)
-                {
-                    var keyboard = new SharpDX.DirectInput.Keyboard(directInput);
-                    var handler = new KeyboardHandler(id, deviceConfig, keyboard);
-                    handler.EnableLogging = true;
-                    allTasks.Add(handler.Run());
-                }
-
-                if (deviceConfig.InputDeviceType == InputDeviceType.Mouse)
-                {
-                    var mouse = new SharpDX.DirectInput.Mouse(directInput);
-                    var handler = new MouseHandler(id, deviceConfig, mouse);
-                    allTasks.Add(handler.Run());
-                }
+            }
+            catch (Exception e)
+            {
+                // ignored
             }
         }
 
