@@ -156,7 +156,7 @@ public static class Executor
         };
     }
 
-    public static bool ParseCondition(string? condition, string id, double value, object rawValue)
+    public static bool ParseCondition(string? condition, string id, string button, double value, object rawValue)
     {
         var helpers = GetHelperFunctions(id);
 
@@ -193,13 +193,14 @@ public static class Executor
         }
         catch (Exception e)
         {
+            Console.WriteLine("Error in condition {0} > {1} > {2}", id, button, condition);
             Console.WriteLine(e);
         }
 
         return false;
     }
 
-    public static void ParseAction(string action, string id, double value, object rawValue)
+    public static void ParseAction(string action, string id, string button, double value, object rawValue)
     {
         var helpers = GetHelperFunctions(id);
 
@@ -231,6 +232,7 @@ public static class Executor
         }
         catch (Exception e)
         {
+            Console.WriteLine("Error in action {0} > {1} > {2}", id, button, action);
             Console.WriteLine(e);
         }
     }

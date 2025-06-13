@@ -94,9 +94,9 @@ class ControllerHandler
         {
             foreach (var command in commands)
             {
-                if (Executor.ParseCondition(command.Condition, _id, value, rawValue))
+                if (Executor.ParseCondition(command.Condition, _id, button, value, rawValue))
                 {
-                    Executor.ParseAction(command.Action, _id, value, rawValue);
+                    Executor.ParseAction(command.Action, _id, button, value, rawValue);
                 }
             }
         }
