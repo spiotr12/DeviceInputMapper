@@ -126,13 +126,13 @@
           "Buttons8": [
             {
               "condition": "value == 1",
-              "action": "log(getDynamicStateValue(\"myVar\"))"
+              "action": "log(getDynamicStateValue(\"ddd\"))"
             }
           ],
           "Buttons9": [
             {
               "condition": "value == 1",
-              "action": "setDynamicStateValue(\"myVar\", 0); log(getDynamicStateValue(\"myVar\"))"
+              "action": "setDynamicStateValue(\"ddd\", 0); log(getDynamicStateValue(\"ddd\"))"
             }
           ],
           "Buttons18": [
