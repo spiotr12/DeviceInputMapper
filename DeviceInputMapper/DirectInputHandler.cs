@@ -1,5 +1,4 @@
 ﻿using SharpDX.DirectInput;
-using Z.Expressions;
 
 namespace DeviceInputMapper;
 
@@ -52,15 +51,15 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
 
                     if (!State.Devices.ContainsKey(_id))
                     {
-                        State.Devices.Add(_id, new Dictionary<string, (double value, object rawValue)>());
+                        State.Devices.Add(_id, new Dictionary<string, StateValue>());
                     }
 
                     if (!State.Devices[_id].ContainsKey(button))
                     {
-                        State.Devices[_id].Add(button, (value, rawValue));
+                        State.Devices[_id].Add(button, new StateValue { value = value, rawValue = rawValue });
                     }
 
-                    State.Devices[_id][button] = (value, rawValue);
+                    State.Devices[_id][button] = (new StateValue { value = value, rawValue = rawValue });
 
                     if (EnableLogging)
                     {

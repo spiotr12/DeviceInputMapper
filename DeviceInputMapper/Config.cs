@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using SharpDX.DirectInput;
 
 namespace DeviceInputMapper;
 

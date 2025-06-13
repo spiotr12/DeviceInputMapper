@@ -1,5 +1,4 @@
 ﻿using SharpDX.DirectInput;
-using Z.Expressions;
 
 namespace DeviceInputMapper;
 

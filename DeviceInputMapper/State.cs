@@ -1,9 +1,15 @@
 ﻿namespace DeviceInputMapper;
 
+public struct StateValue
+{
+    public double value;
+    public object rawValue;
+}
+
 public static class State
 {
-    public static readonly IDictionary<string, IDictionary<string, (double value, object rawValue)>> Devices =
-        new Dictionary<string, IDictionary<string, (double value, object rawValue)>>();
+    public static readonly IDictionary<string, IDictionary<string, StateValue>> Devices =
+        new Dictionary<string, IDictionary<string, StateValue>>();
 
     public static string Mode { get; set; } = "Default";
 
@@ -14,9 +20,9 @@ public static class State
         {
             str += String.Format("id: {0}\n", id);
 
-            foreach (var (key, value) in buttons)
+            foreach (var (key, stateValue) in buttons)
             {
-                str += String.Format("  key: \"{0}\", value: {1}, rawValue: {2}\n", key, value.value, value.rawValue);
+                str += String.Format("  key: \"{0}\", value: {1}, rawValue: {2}\n", key, stateValue.value, stateValue.rawValue);
             }
         }
 

@@ -87,7 +87,7 @@
           ],
           "Buttons0": [
             {
-              "condition": "value == 1",
+              "condition": "log(\"dupa\")",
               "action": "keyClick(\"D\");"
             }
           ],
