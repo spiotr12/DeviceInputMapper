@@ -18,6 +18,13 @@ public class Keyboard
         keybd_event((byte)key, 0, KEY_UP_EVENT, 0);
     }
 
+    public static void Hold(Keys key, int delay)
+    {
+        keybd_event((byte)key, 0, KEY_DOWN_EVENT, 0);
+        Thread.Sleep(delay);
+        keybd_event((byte)key, 0, KEY_UP_EVENT, 0);
+    }
+
     public static void Press(Keys key)
     {
         keybd_event((byte)key, 0, KEY_DOWN_EVENT, 0);

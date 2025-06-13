@@ -10,8 +10,6 @@ class Program
     {
         Thread.CurrentThread.Name = "Main";
 
-
-
         var directInput = new DirectInput();
         var configFilePath = "C:\\Projects\\DeviceInputMapper\\config.json";
 

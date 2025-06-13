@@ -50,15 +50,15 @@
           "RotationY": [
             {
               "condition": "value < 0",
-              "action": "keyAutoRepeat(\"B\", delay);"
+              "action": "var delay = Math.Round(1000 * (1 - Math.Abs(value))); keyDynamicAutoRepeat(\"S\", delay);"
             },
             {
               "condition": "value > 0",
-              "action": "keyAutoRepeat(\"N\", delay);"
+              "action": "var delay = Math.Round(1000 * (1 - Math.Abs(value))); keyDynamicAutoRepeat(\"W\", delay);"
             },
             {
               "condition": "value == 0",
-              "action": "keyAutoRepeat(\"B\"); keyAutoRepeat(\"N\");"
+              "action": "keyStopAutoRepeat(\"S\"); keyStopAutoRepeat(\"W\");"
             }
           ],
           "Buttons14": [
@@ -137,7 +137,7 @@
           ],
           "Buttons18": [
             {
-              "action": "log(deviceStateToString())"
+              "action": "log(globalStateToString())"
             }
           ],
           "Buttons19": [

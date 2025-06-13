@@ -141,6 +141,7 @@ public static class Executor
         State.Devices.TryGetValue(id, out var deviceState);
 
         var keyClick = (string key) => Keyboard.Click(Enum.Parse<Keys>(key));
+        var keyHold = (string key, int delay) => Keyboard.Hold(Enum.Parse<Keys>(key), delay);
         var keyPress = (string key) => Keyboard.Press(Enum.Parse<Keys>(key));
         var keyRelease = (string key) => Keyboard.Release(Enum.Parse<Keys>(key));
 
@@ -198,6 +199,7 @@ public static class Executor
                 globalStateToString,
 
                 keyClick,
+                keyHold,
                 keyPress,
                 keyRelease,
 
