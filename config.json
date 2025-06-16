@@ -4,135 +4,10 @@
       "description": "Side Panel",
       "modes": {
         "Default": {
-          "X": [
-            {
-              "condition": "value < 0",
-              "action": "keyRelease(\"D\"); keyPress(\"A\")"
-            },
-            {
-              "condition": "value > 0",
-              "action": "keyRelease(\"A\"); keyPress(\"D\")"
-            },
-            {
-              "condition": "value == 0",
-              "action": "keyRelease(\"A\"); keyRelease(\"D\")"
-            }
-          ],
-          "Y": [
-            {
-              "condition": "value < 0",
-              "action": "keyRelease(\"S\"); keyPress(\"W\")"
-            },
-            {
-              "condition": "value > 0",
-              "action": "keyRelease(\"W\"); keyPress(\"S\")"
-            },
-            {
-              "condition": "value == 0",
-              "action": "keyRelease(\"W\"); keyRelease(\"S\")"
-            }
-          ],
-          "Z": [],
-          "RotationX": [
-            {
-              "condition": "value < 0",
-              "action": "var delay = Math.Round(1000 * (1 - Math.Abs(value))); keyDynamicAutoRepeat(\"A\", delay);"
-            },
-            {
-              "condition": "value > 0",
-              "action": "var delay = Math.Round(1000 * (1 - Math.Abs(value))); keyDynamicAutoRepeat(\"D\", delay);"
-            },
-            {
-              "condition": "value == 0",
-              "action": "keyStopAutoRepeat(\"A\"); keyStopAutoRepeat(\"D\");"
-            }
-          ],
-          "RotationY": [
-            {
-              "condition": "value < 0",
-              "action": "var delay = Math.Round(1000 * (1 - Math.Abs(value))); keyDynamicAutoRepeat(\"S\", delay);"
-            },
-            {
-              "condition": "value > 0",
-              "action": "var delay = Math.Round(1000 * (1 - Math.Abs(value))); keyDynamicAutoRepeat(\"W\", delay);"
-            },
-            {
-              "condition": "value == 0",
-              "action": "keyStopAutoRepeat(\"S\"); keyStopAutoRepeat(\"W\");"
-            }
-          ],
-          "Buttons14": [
-            {
-              "condition": "value == 1",
-              "action": "keyDynamicAutoRepeat(\"Y\", 300);"
-            }
-          ],
-          "Buttons15": [
-            {
-              "condition": "value == 1",
-              "action": "keyDynamicAutoRepeat(\"Y\", 100);"
-            }
-          ],
-          "Buttons16": [
-            {
-              "condition": "value == 1",
-              "action": "keyDynamicAutoRepeat(\"H\", 500);"
-            }
-          ],
-          "Buttons17": [
-            {
-              "condition": "value == 1",
-              "action": "keyDynamicAutoRepeat(\"H\", 2000);"
-            }
-          ],
           "Buttons0": [
             {
-              "condition": "log(\"dupa\")",
-              "action": "keyClick(\"D\");"
-            }
-          ],
-          "Buttons1": [
-            {
               "condition": "value == 1",
-              "action": "keyPress(\"B\")"
-            },
-            {
-              "condition": "value == 0",
-              "action": "keyRelease(\"B\")"
-            }
-          ],
-          "Buttons2": [
-            {
-              "condition": "value == 1 && getButtonValue(\"Buttons3\") == 1",
-              "action": "keyClick(\"P\")"
-            }
-          ],
-          "Buttons5": [
-            {
-              "condition": "value == 1 && getDeviceButtonValue(\"116af8f0-cbbf-11ef-800e-444553540000\", \"LeftShift\") == 1",
-              "action": "keyClick(\"P\")"
-            }
-          ],
-          "Buttons6": [
-            {
-              "condition": "value == 1",
-              "action": "log(\"Running\"); keyAutoRepeat(\"P\", 1000); log(\"Working\")"
-            },
-            {
-              "condition": "value == 0",
-              "action": "log(\"Running\"); keyStopAutoRepeat(\"P\"); log(\"Working\")"
-            }
-          ],
-          "Buttons8": [
-            {
-              "condition": "value == 1",
-              "action": "log(getDynamicStateValue(\"ddd\"))"
-            }
-          ],
-          "Buttons9": [
-            {
-              "condition": "value == 1",
-              "action": "setDynamicStateValue(\"ddd\", 0); log(getDynamicStateValue(\"ddd\"))"
+              "action": "log(\"1\")"
             }
           ],
           "Buttons18": [
@@ -143,16 +18,6 @@
           "Buttons19": [
             {
               "action": "log(stateToString())"
-            }
-          ],
-          "Buttons23": [
-            {
-              "action": "log(deviceStateToString(\"1169e780-cbbf-11ef-8002-444553540000\"))"
-            }
-          ],
-          "Buttons20": [
-            {
-              "action": "keyStopAllAutoRepeat();"
             }
           ]
         }
@@ -209,7 +74,7 @@
           "A": [
             {
               "condition": "value == 1",
-              "action": "keyClick(\"A\")"
+              "action": "log(\"A\")"
             }
           ]
         }
