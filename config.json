@@ -24,14 +24,6 @@
               }
             ]
           },
-          "Buttons2": {
-            "actions": [
-              {
-                "condition": "value == 1",
-                "action": "reloadJsonConfig()"
-              }
-            ]
-          },
           "Buttons18": {
             "actions": [
               {
@@ -43,6 +35,14 @@
             "actions": [
               {
                 "action": "log(stateToString())"
+              }
+            ]
+          },
+          "Buttons20": {
+            "actions": [
+              {
+                "condition": "value == 1",
+                "action": "reloadJsonConfig()"
               }
             ]
           }

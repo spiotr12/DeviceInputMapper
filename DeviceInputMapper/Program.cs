@@ -16,7 +16,7 @@ class Program
         Thread.CurrentThread.Name = "Main";
 
         var directInput = new DirectInput();
-        var configFilePath = "C:\\Projects\\DeviceInputMapper\\config.json";
+        var configFilePath = args[0];
 
         var deviceController = new DeviceController(directInput, configFilePath);
         deviceController.PrintAllDevicesInfo();
@@ -62,6 +62,7 @@ class Program
 
     private static async Task LoadAndRun(DirectInput directInput, DeviceController deviceController)
     {
+        Thread.Sleep(500);
         Console.WriteLine("Starting...");
         var rawConfig = deviceController.LoadConfig();
         var config = rawConfig.ParseConfig();
