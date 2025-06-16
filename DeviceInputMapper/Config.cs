@@ -32,15 +32,53 @@ public class Config
             return copy;
         }
 
-        // TODO iterate modeConfigs and merge if are parent
-
-        foreach (var (id, modeConfig) in copy.Modes)
+        foreach (var (mode, modeConfig) in copy.Modes)
         {
             if (modeConfig.Parent != null)
             {
+                foreach (var (id, deviceConfig) in copy.Devices)
+                {
+                    if (deviceConfig.Configs == null)
+                    {
+                        deviceConfig.Configs = new Dictionary<string, IDictionary<string, ButtonConfig>>();
+                    }
+
+                    if (!deviceConfig.Configs.ContainsKey(modeConfig.Parent))
+                    {
+                        deviceConfig.Configs[modeConfig.Parent] = new Dictionary<string, ButtonConfig>();
+                    }
+
+                    if (!deviceConfig.Configs.ContainsKey(mode))
+                    {
+                        deviceConfig.Configs[mode] = new Dictionary<string, ButtonConfig>();
+                    }
+
+                    var source = deviceConfig.Configs?[modeConfig.Parent];
+                    var target = deviceConfig.Configs?[mode];
+
+                    if (source == null)
+                    {
+                        Console.WriteLine($"No config found for source \"{id}\": \"{modeConfig.Parent}\"");
+                    }
+
+                    if (target == null)
+                    {
+                        Console.WriteLine($"No config found for target \"{id}\": \"{mode}\"");
+                    }
+
+                    if (source != null && target != null)
+                    {
+                        foreach (var (button, buttonConfig) in source)
+                        {
+                            if (!target.ContainsKey(button))
+                            {
+                                target.Add(button, buttonConfig.Copy());
+                            }
+                        }
+                    }
+                }
             }
         }
-
 
         return copy;
     }
@@ -121,6 +159,5 @@ public class InputConfig
 
 public class ModeConfig
 {
-    [JsonProperty("parent", NullValueHandling = NullValueHandling.Ignore)]
-    public string? Parent;
+    [JsonProperty("parent")] public string? Parent;
 }

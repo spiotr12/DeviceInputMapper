@@ -115,12 +115,12 @@ class ControllerHandler : Handler
 
     protected IDictionary<string, ButtonConfig> GetCurrentModeConfig()
     {
-        if (_config.Configs == null || _config.Configs[State.Mode] == null)
+        if (_config.Configs == null || _config.Configs[State.CurrentMode] == null)
         {
-            throw new Exception("No device configuration found for this mode");
+            throw new Exception($"Mode \"{State.CurrentMode}\" for \"{_id}\" was not found");
         }
 
-        return _config.Configs[State.Mode];
+        return _config.Configs[State.CurrentMode];
     }
 
     private IDictionary<string, StateValue> ToDictionary()

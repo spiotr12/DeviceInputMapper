@@ -1,12 +1,40 @@
 {
   "defaultMode": "Default",
   "modes": {
-    "Default": {}
+    "Default": {
+      "parent": null
+    },
+    "Layer 1": {
+      "parent": "Default"
+    },
+    "Layer 2": {
+      "parent": "Default"
+    }
   },
   "devices": {
     "dc041e30-414d-11f0-8001-444553540000": {
       "description": "Side Panel",
       "configs": {
+        "Layer 1": {
+          "Buttons0": {
+            "actions": [
+              {
+                "condition": "value == 1",
+                "action": "log(\"9\")"
+              }
+            ]
+          }
+        },
+        "Layer 2": {
+          "Buttons0": {
+            "actions": [
+              {
+                "condition": "value == 1",
+                "action": "log(\"Chuje się nie kreskuje\")"
+              }
+            ]
+          }
+        },
         "Default": {
           "Buttons0": {
             "actions": [
@@ -20,7 +48,43 @@
             "actions": [
               {
                 "condition": "value == 1",
-                "action": "exit()"
+                "action": "log(currentMode)"
+              }
+            ]
+          },
+          "Buttons2": {
+            "actions": [
+              {
+                "condition": "value == 1",
+                "action": "changeMode(\"Layer 1\")"
+              }
+            ]
+          },
+          "Buttons3": {
+            "actions": [
+              {
+                "condition": "value == 1",
+                "action": "changeMode(\"Default\")"
+              }
+            ]
+          },
+          "Buttons4": {
+            "actions": [
+              {
+                "condition": "value == 1",
+                "action": "iterateModes(new string[] {\"Default\", \"Layer 1\", \"Layer 2\"})"
+              }
+            ]
+          },
+          "Buttons5": {
+            "actions": [
+              {
+                "condition": "value == 0",
+                "action": "previousMode()"
+              },
+              {
+                "condition": "value == 1",
+                "action": "previousMode()"
               }
             ]
           },

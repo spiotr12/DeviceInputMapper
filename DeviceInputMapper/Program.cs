@@ -66,6 +66,7 @@ class Program
         Console.WriteLine("Starting...");
         var rawConfig = deviceController.LoadConfig();
         var config = rawConfig.ParseConfig();
+        State.Config = config;
 
         foreach (var (id, deviceConfig) in config.Devices)
         {

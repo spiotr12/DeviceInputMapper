@@ -11,11 +11,13 @@ public static class State
     public static readonly IDictionary<string, IDictionary<string, StateValue>> Devices =
         new Dictionary<string, IDictionary<string, StateValue>>();
 
-    public static string Mode { get; set; } = "Default";
+    public static string CurrentMode { get; set; } = "Default";
+    public static string? PreviousMode { get; set; }
+    public static Config? Config { get; set; }
 
     public static string ToString()
     {
-        var str = String.Format("Mode: {0}\n", Mode);
+        var str = String.Format("Mode: {0}\n", CurrentMode);
         foreach (var (id, buttons) in Devices)
         {
             str += String.Format("id: {0}\n", id);

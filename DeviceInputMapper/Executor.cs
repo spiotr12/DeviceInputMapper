@@ -5,6 +5,10 @@ namespace DeviceInputMapper;
 
 public struct HelperFunctions
 {
+    public Action<string> ChangeMode { get; set; }
+    public Action PreviousMode { get; set; }
+    public Action<IEnumerable<string>> IterateModes { get; set; }
+
     public Func<string, IDictionary<string, StateValue>> GetDeviceState { get; set; }
     public Func<string, string, StateValue> GetDeviceButtonState { get; set; }
     public Func<string, string, double> GetDeviceButtonValue { get; set; }
@@ -39,6 +43,38 @@ public static class Executor
 
     private static HelperFunctions GetHelperFunctions(string id)
     {
+        var changeMode = (string nextMode) =>
+        {
+            if ((bool)State.Config?.Modes.ContainsKey(nextMode))
+            {
+                State.PreviousMode = State.CurrentMode;
+                State.CurrentMode = nextMode;
+            }
+            else
+            {
+                throw new Exception($"Mode does not exists: {nextMode}");
+            }
+        };
+
+        var previousMode = () => { changeMode(State.PreviousMode ?? State.Config?.DefaultMode ?? "Default"); };
+
+        var iterateModes = (IEnumerable<string> modesOrder) =>
+        {
+            var list = new List<string>(modesOrder);
+            var modeIndex = list.IndexOf(State.CurrentMode);
+            int nextIndex;
+            if (modeIndex == -1 || modeIndex == list.Count - 1)
+            {
+                nextIndex = 0;
+            }
+            else
+            {
+                nextIndex = modeIndex + 1;
+            }
+
+            changeMode(list[nextIndex]);
+        };
+
         var getDeviceState = (string identifier) =>
         {
             if (State.Devices.TryGetValue(identifier, out var stateValue))
@@ -135,6 +171,10 @@ public static class Executor
 
         return new HelperFunctions
         {
+            ChangeMode = changeMode,
+            PreviousMode = previousMode,
+            IterateModes = iterateModes,
+
             GetDeviceState = getDeviceState,
             GetDeviceButtonState = getDeviceButtonState,
             GetDeviceButtonValue = getDeviceButtonValue,
@@ -180,7 +220,7 @@ public static class Executor
                 id,
                 value,
                 rawValue,
-                mode = State.Mode,
+                currentMode = State.CurrentMode,
                 state = State.GetDevice(id),
                 globalState = State.Devices,
                 getDeviceState = helpers.GetDeviceState,
@@ -221,9 +261,12 @@ public static class Executor
                 id,
                 value,
                 rawValue,
-                mode = State.Mode,
+                currentMode = State.CurrentMode,
                 state = State.GetDevice(id),
                 globalState = State.Devices,
+                changeMode = helpers.ChangeMode,
+                previousMode = helpers.PreviousMode,
+                iterateModes = helpers.IterateModes,
                 getDynamicStateValue = helpers.GetDynamicStateValue,
                 setDynamicStateValue = helpers.SetDynamicStateValue,
                 stateToString = helpers.StateToString,
