@@ -1,5 +1,5 @@
 {
-  "currentMode": "Default",
+  "defaultMode": "Default",
   "modes": {
     "Default": {}
   },

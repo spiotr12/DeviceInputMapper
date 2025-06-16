@@ -28,14 +28,14 @@ public class DeviceController
         var mapperConfiguration = new MapperConfiguration(cfg => cfg.CreateMap<DeviceInstance, DeviceConfig>());
         var mapper = mapperConfiguration.CreateMapper();
 
-        if (deserializeConfig.CurrentMode == null)
+        if (deserializeConfig.DefaultMode == null)
         {
-            deserializeConfig.CurrentMode = "Default";
+            deserializeConfig.DefaultMode = "Default";
         }
 
-        if (!deserializeConfig.Modes.TryGetValue(deserializeConfig.CurrentMode, out var modeConfig))
+        if (!deserializeConfig.Modes.TryGetValue(deserializeConfig.DefaultMode, out var modeConfig))
         {
-            deserializeConfig.Modes.Add(deserializeConfig.CurrentMode, new ModeConfig());
+            deserializeConfig.Modes.Add(deserializeConfig.DefaultMode, new ModeConfig());
         }
 
         foreach (var (id, deviceConfig) in deserializeConfig.Devices)

@@ -13,7 +13,7 @@ public static class InputDeviceType
 
 public class Config
 {
-    [JsonProperty("currentMode")] public string CurrentMode = "Default";
+    [JsonProperty("defaultMode")] public string DefaultMode = "Default";
 
     [JsonProperty("modes", NullValueHandling = NullValueHandling.Ignore)]
     public IDictionary<string, ModeConfig> Modes = new Dictionary<string, ModeConfig>();
