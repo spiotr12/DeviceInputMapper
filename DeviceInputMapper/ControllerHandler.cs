@@ -43,7 +43,9 @@ class ControllerHandler : Handler
 
     private void RunHandler(CancellationToken ctsToken)
     {
+        Console.WriteLine("Controller \"{0}\" [{1}]\n> Listening to events\n", _config.InstanceName, _config.InstanceGuid);
         while (!ctsToken.IsCancellationRequested)
+
         {
             if (_controller.IsConnected)
             {
@@ -94,7 +96,7 @@ class ControllerHandler : Handler
             }
         }
 
-        ctsToken.ThrowIfCancellationRequested();
+        // ctsToken.ThrowIfCancellationRequested();
     }
 
     private void Handle(string button, double value, object rawValue)

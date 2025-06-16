@@ -34,7 +34,7 @@ abstract class DirectInputHandler<T, TRaw, TUpdate> : Handler
 
     private void RunHandler(CancellationToken ctsToken)
     {
-        Console.WriteLine("{0} [{1}]\n> Task listening to events\n", _config.InstanceName, _config.InstanceGuid);
+        Console.WriteLine("\"{0}\" [{1}]\n> Listening to events\n", _config.InstanceName, _config.InstanceGuid);
 
         // Poll events from joystick
         while (!ctsToken.IsCancellationRequested)
@@ -75,7 +75,7 @@ abstract class DirectInputHandler<T, TRaw, TUpdate> : Handler
             }
         }
 
-        ctsToken.ThrowIfCancellationRequested();
+        // ctsToken.ThrowIfCancellationRequested();
     }
 
     protected virtual void Handle(TUpdate state, string button, double value, object rawValue)

@@ -16,6 +16,22 @@
               }
             ]
           },
+          "Buttons1": {
+            "actions": [
+              {
+                "condition": "value == 1",
+                "action": "exit()"
+              }
+            ]
+          },
+          "Buttons2": {
+            "actions": [
+              {
+                "condition": "value == 1",
+                "action": "reloadJsonConfig()"
+              }
+            ]
+          },
           "Buttons18": {
             "actions": [
               {

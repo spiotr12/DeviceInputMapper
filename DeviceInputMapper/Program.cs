@@ -1,10 +1,15 @@
-﻿using SharpDX.DirectInput;
+﻿using System.Reactive.Linq;
+using EventQueue;
+using SharpDX.DirectInput;
 using SharpDX.XInput;
 
 namespace DeviceInputMapper;
 
 class Program
 {
+    private static readonly List<(Task task, CancellationTokenSource cts)> _allHandlersTasks = [];
+    private static readonly bool _enableGlobalLogging = false;
+
     [STAThread]
     static async Task Main(string[] args)
     {
@@ -16,22 +21,50 @@ class Program
         var deviceController = new DeviceController(directInput, configFilePath);
         deviceController.PrintAllDevicesInfo();
 
-        var config = deviceController.LoadConfig();
+        EventBus.Queue.Subscribe(async void (ev) =>
+        {
+            if (ev.Message != null)
+            {
+                if (ev.Message.Equals(Event.StartMessage))
+                {
+                    Task.Run(() => LoadAndRun(directInput, deviceController));
+                }
 
-        var enableGlobalLogging = false;
+                if (ev.Message.Equals(Event.ReloadMessage))
+                {
+                    foreach (var (task, cts) in _allHandlersTasks)
+                    {
+                        cts.Cancel();
+                    }
 
-        var allHandlersTasks = new List<(Task task, CancellationTokenSource cts)>();
+                    _allHandlersTasks.Clear();
+                    Task.Run(() => LoadAndRun(directInput, deviceController));
+                }
 
-        // var c1 = new Controller(UserIndex.One);
-        // var c2 = new Controller(UserIndex.Two);
-        //
-        // while (true)
-        // {
-        //     if (c1.IsConnected)
-        //         Console.WriteLine("c1 {0}", c1.GetState().Gamepad.ToString());
-        //     if (c2.IsConnected)
-        //         Console.WriteLine("c2 {0}", c2.GetState().Gamepad.ToString());
-        // }
+                if (ev.Message.Equals(Event.ExitMessage))
+                {
+                    foreach (var (task, cts) in _allHandlersTasks)
+                    {
+                        cts.Cancel();
+                    }
+
+                    _allHandlersTasks.Clear();
+
+                    EventBus.Complete();
+                }
+            }
+        });
+
+        EventBus.Emit(Event.Start);
+
+        await EventBus.Queue;
+    }
+
+    private static async Task LoadAndRun(DirectInput directInput, DeviceController deviceController)
+    {
+        Console.WriteLine("Starting...");
+        var rawConfig = deviceController.LoadConfig();
+        var config = rawConfig.ParseConfig();
 
         foreach (var (id, deviceConfig) in config.Devices)
         {
@@ -86,13 +119,15 @@ class Program
 
             if (handler != null)
             {
-                handler.EnableLogging = enableGlobalLogging;
+                handler.EnableLogging = _enableGlobalLogging;
                 var prepared = handler.Prepare();
                 prepared.task.Start();
-                allHandlersTasks.Add(prepared);
+                _allHandlersTasks.Add(prepared);
             }
         }
 
-        await Task.WhenAll(allHandlersTasks.Select(t => t.task));
+        await Task.WhenAll(_allHandlersTasks.Select(t => t.task));
+
+        Console.WriteLine("Finished");
     }
 }

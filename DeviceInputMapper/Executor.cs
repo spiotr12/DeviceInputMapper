@@ -1,4 +1,5 @@
-﻿using Z.Expressions;
+﻿using EventQueue;
+using Z.Expressions;
 
 namespace DeviceInputMapper;
 
@@ -27,7 +28,9 @@ public struct HelperFunctions
     public Action KeyStopAllAutoRepeat { get; set; }
 
     public Action<object> Log { get; set; }
+    public Action ReloadJsonConfig { get; set; }
     public Func<bool> Test { get; set; }
+    public Action Exit { get; set; }
 }
 
 public static class Executor
@@ -127,6 +130,9 @@ public static class Executor
             return true;
         };
 
+        var exit = () => { EventBus.Emit(Event.Exit); };
+        var reloadJsonConfig = () => { EventBus.Emit(Event.Reload); };
+
         return new HelperFunctions
         {
             GetDeviceState = getDeviceState,
@@ -152,7 +158,9 @@ public static class Executor
             KeyStopAllAutoRepeat = keyStopAllAutoRepeat,
 
             Log = log,
+            ReloadJsonConfig = reloadJsonConfig,
             Test = test,
+            Exit = exit,
         };
     }
 
@@ -188,6 +196,8 @@ public static class Executor
                 getDynamicStateValue = helpers.GetDynamicStateValue,
                 setDynamicStateValue = helpers.SetDynamicStateValue,
                 log = helpers.Log,
+                reloadJsonConfig = helpers.ReloadJsonConfig,
+                exit = helpers.Exit,
                 test = helpers.Test,
             });
         }
@@ -228,6 +238,8 @@ public static class Executor
                 keyStopAutoRepeat = helpers.KeyStopAutoRepeat,
                 keyStopAllAutoRepeat = helpers.KeyStopAllAutoRepeat,
                 log = helpers.Log,
+                reloadJsonConfig = helpers.ReloadJsonConfig,
+                exit = helpers.Exit,
             });
         }
         catch (Exception e)
