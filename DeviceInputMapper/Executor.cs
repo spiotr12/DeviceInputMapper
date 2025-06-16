@@ -156,7 +156,7 @@ public static class Executor
         };
     }
 
-    public static bool ParseCondition(string? condition, string id, string button, ButtonConfig buttonConfig, double value, object rawValue)
+    public static bool ParseCondition(string? condition, string id, string button, double value, object rawValue)
     {
         var helpers = GetHelperFunctions(id);
 
@@ -200,7 +200,7 @@ public static class Executor
         return false;
     }
 
-    public static void ParseAction(string action, string id, string button, ButtonConfig buttonConfig, double value, object rawValue)
+    public static void ParseAction(string action, string id, string button, double value, object rawValue)
     {
         var helpers = GetHelperFunctions(id);
 
