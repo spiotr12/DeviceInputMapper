@@ -1,25 +1,35 @@
 {
+  "currentMode": "Default",
+  "modes": {
+    "Default": {}
+  },
   "devices": {
     "dc041e30-414d-11f0-8001-444553540000": {
       "description": "Side Panel",
-      "modes": {
+      "configs": {
         "Default": {
-          "Buttons0": [
-            {
-              "condition": "value == 1",
-              "action": "log(\"1\")"
-            }
-          ],
-          "Buttons18": [
-            {
-              "action": "log(globalStateToString())"
-            }
-          ],
-          "Buttons19": [
-            {
-              "action": "log(stateToString())"
-            }
-          ]
+          "Buttons0": {
+            "actions": [
+              {
+                "condition": "value == 1",
+                "action": "log(\"1\")"
+              }
+            ]
+          },
+          "Buttons18": {
+            "actions": [
+              {
+                "action": "log(globalStateToString())"
+              }
+            ]
+          },
+          "Buttons19": {
+            "actions": [
+              {
+                "action": "log(stateToString())"
+              }
+            ]
+          }
         }
       },
       "inputDeviceType": "joystick",
@@ -34,9 +44,24 @@
       "_usage": "VrHeadTracker",
       "_usagePage": "Generic"
     },
+    "One": {
+      "configs": {
+        "Default": {
+          "A": {
+            "actions": [
+              {
+                "condition": "value == 1",
+                "action": "log(\"A\")"
+              }
+            ]
+          }
+        }
+      },
+      "inputDeviceType": "controller"
+    },
     "116af8f0-cbbf-11ef-800e-444553540000": {
       "description": "SteelSeries Apex Keyboard",
-      "modes": {
+      "configs": {
         "Default": {}
       },
       "inputDeviceType": "keyboard",
@@ -53,7 +78,7 @@
     },
     "1169e780-cbbf-11ef-8002-444553540000": {
       "description": "SteelSeries Rival 5 Mouse",
-      "modes": {
+      "configs": {
         "Default": {}
       },
       "inputDeviceType": "mouse",
@@ -67,19 +92,6 @@
       "_subtype": 256,
       "_usage": "HapticsSimpleController",
       "_usagePage": "Consumer"
-    },
-    "One": {
-      "modes": {
-        "Default": {
-          "A": [
-            {
-              "condition": "value == 1",
-              "action": "log(\"A\")"
-            }
-          ]
-        }
-      },
-      "inputDeviceType": "controller"
     }
   }
 }

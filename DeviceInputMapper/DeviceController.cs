@@ -28,6 +28,16 @@ public class DeviceController
         var mapperConfiguration = new MapperConfiguration(cfg => cfg.CreateMap<DeviceInstance, DeviceConfig>());
         var mapper = mapperConfiguration.CreateMapper();
 
+        if (deserializeConfig.CurrentMode == null)
+        {
+            deserializeConfig.CurrentMode = "Default";
+        }
+
+        if (!deserializeConfig.Modes.TryGetValue(deserializeConfig.CurrentMode, out var modeConfig))
+        {
+            deserializeConfig.Modes.Add(deserializeConfig.CurrentMode, new ModeConfig());
+        }
+
         foreach (var (id, deviceConfig) in deserializeConfig.Devices)
         {
             try
@@ -43,10 +53,17 @@ public class DeviceController
                 // ignore
             }
 
-            if (deviceConfig.Modes == null || deviceConfig.Modes.Count == 0)
+            if (deviceConfig.Configs == null || deviceConfig.Configs.Count == 0)
             {
-                deviceConfig.Modes = new Dictionary<string, IDictionary<string, IEnumerable<InputConfig>>>();
-                deviceConfig.Modes.Add("Default", new Dictionary<string, IEnumerable<InputConfig>>());
+                deviceConfig.Configs = new Dictionary<string, IDictionary<string, ButtonConfig>>();
+                deviceConfig.Configs.Add("Default", new Dictionary<string, ButtonConfig>());
+            }
+            else
+            {
+                foreach (var (key, buttonConfigs) in deviceConfig.Configs)
+                {
+                    deserializeConfig.Modes[key] = new ModeConfig();
+                }
             }
         }
 
