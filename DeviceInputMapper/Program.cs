@@ -20,7 +20,7 @@ class Program
 
         var enableGlobalLogging = false;
 
-        var allTasks = new List<Task>();
+        var allHandlersTasks = new List<(Task task, CancellationTokenSource cts)>();
 
         // var c1 = new Controller(UserIndex.One);
         // var c2 = new Controller(UserIndex.Two);
@@ -87,10 +87,12 @@ class Program
             if (handler != null)
             {
                 handler.EnableLogging = enableGlobalLogging;
-                allTasks.Add(handler.Prepare());
+                var prepared = handler.Prepare();
+                prepared.task.Start();
+                allHandlersTasks.Add(prepared);
             }
         }
 
-        await Task.WhenAll(allTasks);
+        await Task.WhenAll(allHandlersTasks.Select(t => t.task));
     }
 }

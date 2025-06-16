@@ -34,11 +34,18 @@ class ControllerHandler : Handler
     //     return state.Offset.ToString();
     // }
 
-    public Task Prepare()
+    public (Task task, CancellationTokenSource cts) Prepare()
     {
-        return Task.Run(() =>
+        var cts = new CancellationTokenSource();
+        var task = new Task(() => RunHandler(cts.Token), cts.Token);
+        return (task, cts);
+    }
+
+    private void RunHandler(CancellationToken ctsToken)
+    {
+        while (!ctsToken.IsCancellationRequested)
         {
-            while (_controller.IsConnected)
+            if (_controller.IsConnected)
             {
                 // Console.WriteLine(_controller.GetState().Gamepad);
 
@@ -85,7 +92,9 @@ class ControllerHandler : Handler
                     _previous = _controller.GetState().Gamepad.ToString();
                 }
             }
-        }, new CancellationToken());
+        }
+
+        ctsToken.ThrowIfCancellationRequested();
     }
 
     private void Handle(string button, double value, object rawValue)

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Extensions;
+using Newtonsoft.Json;
 
 namespace DeviceInputMapper;
 
@@ -19,7 +20,30 @@ public class Config
     public IDictionary<string, ModeConfig> Modes = new Dictionary<string, ModeConfig>();
 
     [JsonProperty("devices", NullValueHandling = NullValueHandling.Ignore)]
-    public IDictionary<string, DeviceConfig> Devices;
+    public IDictionary<string, DeviceConfig> Devices = new Dictionary<string, DeviceConfig>();
+
+    public Config ParseConfig()
+    {
+        var copy = this.Copy();
+
+        // Nothing to merge
+        if (Modes.Count <= 1)
+        {
+            return copy;
+        }
+
+        // TODO iterate modeConfigs and merge if are parent
+
+        foreach (var (id, modeConfig) in copy.Modes)
+        {
+            if (modeConfig.Parent != null)
+            {
+            }
+        }
+
+
+        return copy;
+    }
 }
 
 public class DeviceConfig

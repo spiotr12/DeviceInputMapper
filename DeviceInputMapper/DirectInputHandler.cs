@@ -25,51 +25,57 @@ abstract class DirectInputHandler<T, TRaw, TUpdate> : Handler
 
     protected abstract string GetButtonName(TUpdate state);
 
-    public Task Prepare()
+    public (Task task, CancellationTokenSource cts) Prepare()
     {
-        return Task.Run(() =>
+        var cts = new CancellationTokenSource();
+        var task = new Task(() => RunHandler(cts.Token), cts.Token);
+        return (task, cts);
+    }
+
+    private void RunHandler(CancellationToken ctsToken)
+    {
+        Console.WriteLine("{0} [{1}]\n> Task listening to events\n", _config.InstanceName, _config.InstanceGuid);
+
+        // Poll events from joystick
+        while (!ctsToken.IsCancellationRequested)
         {
-            Console.WriteLine("{0} [{1}]\n> Task listening to events\n", _config.InstanceName, _config.InstanceGuid);
-
-            // Poll events from joystick
-            while (true)
+            _device.Poll();
+            var data = _device.GetBufferedData();
+            foreach (var state in data)
             {
-                _device.Poll();
-                var data = _device.GetBufferedData();
-                foreach (var state in data)
+                if (EnableLogging)
                 {
-                    if (EnableLogging)
-                    {
-                        Console.WriteLine("{0} [{1}] ({2})", _config.InstanceName, _config.InputDeviceType, _id);
-                        Console.WriteLine("> {0}\n", state);
-                    }
-
-                    // Update global state
-                    var button = GetButtonName(state);
-                    var rawValue = state.Value;
-                    var value = ParseValue(state);
-
-                    if (!State.Devices.ContainsKey(_id))
-                    {
-                        State.Devices.Add(_id, new Dictionary<string, StateValue>());
-                    }
-
-                    if (!State.Devices[_id].ContainsKey(button))
-                    {
-                        State.Devices[_id].Add(button, new StateValue { value = value, rawValue = rawValue });
-                    }
-
-                    State.Devices[_id][button] = (new StateValue { value = value, rawValue = rawValue });
-
-                    if (EnableLogging)
-                    {
-                        Console.WriteLine(State.ToString());
-                    }
-
-                    Handle(state, button, value, rawValue);
+                    Console.WriteLine("{0} [{1}] ({2})", _config.InstanceName, _config.InputDeviceType, _id);
+                    Console.WriteLine("> {0}\n", state);
                 }
+
+                // Update global state
+                var button = GetButtonName(state);
+                var rawValue = state.Value;
+                var value = ParseValue(state);
+
+                if (!State.Devices.ContainsKey(_id))
+                {
+                    State.Devices.Add(_id, new Dictionary<string, StateValue>());
+                }
+
+                if (!State.Devices[_id].ContainsKey(button))
+                {
+                    State.Devices[_id].Add(button, new StateValue { value = value, rawValue = rawValue });
+                }
+
+                State.Devices[_id][button] = (new StateValue { value = value, rawValue = rawValue });
+
+                if (EnableLogging)
+                {
+                    Console.WriteLine(State.ToString());
+                }
+
+                Handle(state, button, value, rawValue);
             }
-        }, new CancellationToken());
+        }
+
+        ctsToken.ThrowIfCancellationRequested();
     }
 
     protected virtual void Handle(TUpdate state, string button, double value, object rawValue)
