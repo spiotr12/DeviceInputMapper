@@ -74,26 +74,26 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
 
     protected virtual void Handle(TUpdate state, string button, double value, object rawValue)
     {
-        if (GetCurrentModeConfig().TryGetValue(button, out var commands))
+        if (GetCurrentModeConfig().TryGetValue(button, out var buttonConfig))
         {
-            foreach (var command in commands)
+            foreach (var action in buttonConfig.Actions)
             {
-                if (Executor.ParseCondition(command.Condition, _id, button, value, rawValue))
+                if (Executor.ParseCondition(action.Condition, _id, button, buttonConfig, value, rawValue))
                 {
-                    Executor.ParseAction(command.Action, _id, button, value, rawValue);
+                    Executor.ParseAction(action.Action, _id, button, buttonConfig, value, rawValue);
                 }
             }
         }
     }
 
-    protected IDictionary<string, IEnumerable<InputConfig>> GetCurrentModeConfig()
+    protected IDictionary<string, ButtonConfig> GetCurrentModeConfig()
     {
-        if (_config.Modes == null || _config.Modes[State.Mode] == null)
+        if (_config.Configs == null || _config.Configs[State.Mode] == null)
         {
             throw new Exception("No device configuration found for this mode");
         }
 
-        return _config.Modes[State.Mode];
+        return _config.Configs[State.Mode];
     }
 
     protected abstract double ParseValue(TUpdate state);

@@ -13,6 +13,11 @@ public static class InputDeviceType
 
 public class Config
 {
+    [JsonProperty("currentMode")] public string CurrentMode = "Default";
+
+    [JsonProperty("modes", NullValueHandling = NullValueHandling.Ignore)]
+    public IDictionary<string, ModeConfig> Modes = new Dictionary<string, ModeConfig>();
+
     [JsonProperty("devices", NullValueHandling = NullValueHandling.Ignore)]
     public IDictionary<string, DeviceConfig> Devices;
 }
@@ -22,8 +27,8 @@ public class DeviceConfig
     [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
     public string? Description;
 
-    [JsonProperty("modes", NullValueHandling = NullValueHandling.Ignore)]
-    public IDictionary<string, IDictionary<string, IEnumerable<InputConfig>>>? Modes;
+    [JsonProperty("configs", NullValueHandling = NullValueHandling.Ignore)]
+    public IDictionary<string, IDictionary<string, ButtonConfig>>? Configs;
 
     [JsonProperty("inputDeviceType", NullValueHandling = NullValueHandling.Ignore)]
     public string? InputDeviceType;
@@ -60,11 +65,38 @@ public class DeviceConfig
     public string? UsagePage;
 }
 
+public class ButtonConfig
+{
+    [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
+    public string? label;
+
+    [JsonProperty("min", NullValueHandling = NullValueHandling.Ignore)]
+    public double? MinValue;
+
+    [JsonProperty("max", NullValueHandling = NullValueHandling.Ignore)]
+    public double? MaxValue;
+
+    [JsonProperty("rawMin", NullValueHandling = NullValueHandling.Ignore)]
+    public object? MinRawValue;
+
+    [JsonProperty("rawMax", NullValueHandling = NullValueHandling.Ignore)]
+    public object? MaxRawValue;
+
+    [JsonProperty("actions", NullValueHandling = NullValueHandling.Ignore)]
+    public IEnumerable<InputConfig> Actions = new List<InputConfig>();
+}
+
 public class InputConfig
 {
     [JsonProperty("condition", NullValueHandling = NullValueHandling.Ignore)]
     public string? Condition;
 
     [JsonProperty("action", NullValueHandling = NullValueHandling.Ignore)]
-    public string Action;
+    public string Action = "";
+}
+
+public class ModeConfig
+{
+    [JsonProperty("parent", NullValueHandling = NullValueHandling.Ignore)]
+    public string? Parent;
 }
