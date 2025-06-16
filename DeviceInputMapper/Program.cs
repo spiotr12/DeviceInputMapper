@@ -35,6 +35,8 @@ class Program
 
         foreach (var (id, deviceConfig) in config.Devices)
         {
+            Handler handler = null;
+
             // DirectInputDevices
             try
             {
@@ -46,25 +48,19 @@ class Program
                         if (deviceConfig.InputDeviceType == InputDeviceType.Joystick)
                         {
                             var joystick = new Joystick(directInput, instanceGuid);
-                            var handler = new JoystickHandler(id, deviceConfig, joystick);
-                            handler.EnableLogging = enableGlobalLogging;
-                            allTasks.Add(handler.Run());
+                            handler = new JoystickHandler(id, deviceConfig, joystick);
                         }
 
                         if (deviceConfig.InputDeviceType == InputDeviceType.Keyboard)
                         {
                             var keyboard = new SharpDX.DirectInput.Keyboard(directInput);
-                            var handler = new KeyboardHandler(id, deviceConfig, keyboard);
-                            handler.EnableLogging = enableGlobalLogging;
-                            allTasks.Add(handler.Run());
+                            handler = new KeyboardHandler(id, deviceConfig, keyboard);
                         }
 
                         if (deviceConfig.InputDeviceType == InputDeviceType.Mouse)
                         {
                             var mouse = new SharpDX.DirectInput.Mouse(directInput);
-                            var handler = new MouseHandler(id, deviceConfig, mouse);
-                            handler.EnableLogging = enableGlobalLogging;
-                            allTasks.Add(handler.Run());
+                            handler = new MouseHandler(id, deviceConfig, mouse);
                         }
                     }
                 }
@@ -80,14 +76,18 @@ class Program
                 if (Enum.TryParse<UserIndex>(id, out UserIndex userIndex))
                 {
                     var controller = new Controller(userIndex);
-                    var handler = new ControllerHandler(id, deviceConfig, controller);
-                    handler.EnableLogging = enableGlobalLogging;
-                    allTasks.Add(handler.Run());
+                    handler = new ControllerHandler(id, deviceConfig, controller);
                 }
             }
             catch (Exception e)
             {
                 // ignored
+            }
+
+            if (handler != null)
+            {
+                handler.EnableLogging = enableGlobalLogging;
+                allTasks.Add(handler.Prepare());
             }
         }
 

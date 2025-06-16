@@ -2,7 +2,7 @@
 
 namespace DeviceInputMapper;
 
-abstract class DirectInputHandler<T, TRaw, TUpdate>
+abstract class DirectInputHandler<T, TRaw, TUpdate> : Handler
     where T : class, IDeviceState<TRaw, TUpdate>, new()
     where TRaw : struct
     where TUpdate : struct, IStateUpdate
@@ -25,7 +25,7 @@ abstract class DirectInputHandler<T, TRaw, TUpdate>
 
     protected abstract string GetButtonName(TUpdate state);
 
-    public virtual Task Run()
+    public Task Prepare()
     {
         return Task.Run(() =>
         {

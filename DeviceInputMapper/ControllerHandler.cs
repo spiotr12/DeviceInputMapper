@@ -2,7 +2,7 @@
 
 namespace DeviceInputMapper;
 
-class ControllerHandler
+class ControllerHandler : Handler
 {
     public bool EnableLogging { get; set; }
 
@@ -34,7 +34,7 @@ class ControllerHandler
     //     return state.Offset.ToString();
     // }
 
-    public virtual Task Run()
+    public Task Prepare()
     {
         return Task.Run(() =>
         {

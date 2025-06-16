@@ -2,6 +2,6 @@
 
 public interface Handler
 {
-    public abstract (Thread thread, CancellationTokenSource cts) Prepare();
+    public abstract Task Prepare();
     public bool EnableLogging { get; set; }
 }
