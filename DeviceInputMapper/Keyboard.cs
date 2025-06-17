@@ -50,7 +50,7 @@ public class Keyboard
         if (_autoRepeatState.ContainsKey(key.ToString()))
         {
             var state = _autoRepeatState[key.ToString()];
-            _autoRepeatState[key.ToString()] = state with { Delay = delay };
+            _autoRepeatState[key.ToString()] = state with { Delay = delay, PreviousDelay = state.Delay };
         }
         else
         {
@@ -59,6 +59,7 @@ public class Keyboard
                 Cts = cts,
                 Thread = thread,
                 Delay = delay,
+                PreviousDelay = delay,
             });
 
             thread.Start(new AutoRepeatParameters { Cts = cts, Key = key, Delay = delay });
@@ -67,7 +68,7 @@ public class Keyboard
 
     public static void DynamicAutoRepeatClickMinMaxTime(Keys key, double value, int minTime, int maxTime)
     {
-        var delay = (int)Math.Round(1000 * (1 - Math.Abs(value))) + minTime;
+        var delay = (int)Math.Round(maxTime * (1 - Math.Abs(value))) + minTime;
         DynamicAutoRepeatClick(key, delay);
     }
 
@@ -110,7 +111,7 @@ public class Keyboard
         if (_autoRepeatState.ContainsKey(key.ToString()))
         {
             var state = _autoRepeatState[key.ToString()];
-            _autoRepeatState[key.ToString()] = state with { Delay = delay };
+            _autoRepeatState[key.ToString()] = state with { Delay = delay, PreviousDelay = state.Delay };
         }
         else
         {
@@ -119,15 +120,16 @@ public class Keyboard
                 Cts = cts,
                 Thread = thread,
                 Delay = delay,
+                PreviousDelay = delay,
             });
 
             thread.Start(new AutoRepeatParameters { Cts = cts, Key = key, Delay = delay, HoldTime = holdTime });
         }
     }
 
-    public static void DynamicAutoRepeatHoldMinMaxTime(Keys key, double value, int holdTime, int minTime, int maxTime)
+    public static void DynamicAutoRepeatHoldMinMaxTime(Keys key, double value, int minTime, int maxTime, int holdTime)
     {
-        var delay = (int)Math.Round(1000 * (1 - Math.Abs(value))) + minTime;
+        var delay = (int)Math.Round(maxTime * (1 - Math.Abs(value))) + minTime;
         DynamicAutoRepeatHold(key, delay, holdTime);
     }
 
@@ -147,8 +149,28 @@ public class Keyboard
             if (_autoRepeatState.TryGetValue(key.ToString(), out var state))
             {
                 cts = state.Cts;
-                Hold(key, holdTime);
-                Thread.Sleep(state.Delay);
+                Console.WriteLine($"{state.Delay}, {state.PreviousDelay}");
+
+                if (state.Delay <= 0 && !state.HoldPressed)
+                {
+                    Console.WriteLine("Press");
+                    _autoRepeatState[key.ToString()] = state with { HoldPressed = true};
+                    Press(key);
+                }
+                else if(state.Delay > 0 && state.HoldPressed)
+                {
+                    Console.WriteLine("Release");
+                    _autoRepeatState[key.ToString()] = state with { HoldPressed = false};
+                    Release(key);
+                }
+
+                if (state.Delay > 0)
+                {
+                    Console.WriteLine("Hold start");
+                    Hold(key, holdTime);
+                    Console.WriteLine("Hold end");
+                    Thread.Sleep(state.Delay >= 0 ? state.Delay : 0);
+                }
             }
             else
             {
@@ -193,6 +215,9 @@ public struct AutoRepeatParameters
 public struct AutoRepeatState
 {
     public int Delay { get; set; }
+    public int PreviousDelay { get; set; }
+    public int? HoldTime { get; set; }
+    public bool HoldPressed { get; set; }
     public CancellationTokenSource Cts;
     public Thread Thread;
 }

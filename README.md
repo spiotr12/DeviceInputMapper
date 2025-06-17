@@ -232,7 +232,7 @@ autorepeat for given key. Available in: (***action***)
 Dynamically change delay time. Updates delay for given key, reusing previous autorepeat. E.g.:
 `"var delay = Math.Round(1000 * (1 - Math.Abs(value))); keyDynamicAutoRepeatHold(\"A\", delay);"`. Available in: (***action***)
 
-`keyDynamicAutoRepeatHoldMinMaxTime(string key, double value, int holdTime, int minTime, int maxTime)` Wrapper for:
+`keyDynamicAutoRepeatHoldMinMaxTime(string key, double value, int minTime, int maxTime, int holdTime)` Wrapper for:
 `"var delay = Math.Round(maxTime * (1 - Math.Abs(value))) + minTime; keyDynamicAutoRepeatHold(key, delay);"`. Available in: (***action***)
 
 `keyStopAutoRepeat(string key)` Kills autorepeat for given key. Available in: (***action***)

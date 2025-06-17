@@ -34,11 +34,11 @@
             "actions": [
               {
                 "condition": "value < 0",
-                "action": "keyDynamicAutoRepeatHoldMinMaxTime(\"W\", value, 1000, 1, 200); keyStopAutoRepeat(\"S\");"
+                "action": "keyDynamicAutoRepeatHoldMinMaxTime(\"W\", value, -100, 200, 1000); keyStopAutoRepeat(\"S\");"
               },
               {
                 "condition": "value > 0",
-                "action": "keyDynamicAutoRepeatHoldMinMaxTime(\"S\", value, 1000, 1, 200); keyStopAutoRepeat(\"W\"); "
+                "action": "keyDynamicAutoRepeatHoldMinMaxTime(\"S\", value, -100, 200, 1000); keyStopAutoRepeat(\"W\"); "
               },
               {
                 "condition": "value == 0",

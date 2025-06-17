@@ -159,8 +159,8 @@ public static class Executor
         var keyAutoRepeatHold = (string key, int delay, int holdTime) => Keyboard.AutoRepeatHold(Enum.Parse<Keys>(key), delay, holdTime);
         var keyDynamicAutoRepeatHold = (string key, int delay, int holdTime) =>
             Keyboard.DynamicAutoRepeatHold(Enum.Parse<Keys>(key), delay, holdTime);
-        var keyDynamicAutoRepeatHoldMinMaxTime = (string key, double value, int holdTime, int minTime, int maxTime) =>
-            Keyboard.DynamicAutoRepeatHoldMinMaxTime(Enum.Parse<Keys>(key), value, holdTime, minTime, maxTime);
+        var keyDynamicAutoRepeatHoldMinMaxTime = (string key, double value, int minTime, int maxTime, int holdTime) =>
+            Keyboard.DynamicAutoRepeatHoldMinMaxTime(Enum.Parse<Keys>(key), value, minTime, maxTime, holdTime);
 
 
         var keyStopAutoRepeat = (string key) => Keyboard.StopAutoRepeat(Enum.Parse<Keys>(key));
