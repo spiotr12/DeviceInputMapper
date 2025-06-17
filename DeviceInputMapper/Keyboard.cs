@@ -65,6 +65,12 @@ public class Keyboard
         }
     }
 
+    public static void DynamicAutoRepeatMinMaxTime(Keys key, double value, int minTime, int maxTime)
+    {
+        var delay = (int)Math.Round(1000 * (1 - Math.Abs(value))) + minTime;
+        DynamicAutoRepeat(key, delay);
+    }
+
     private static void AutoRepeatFn(object? obj)
     {
         if (obj == null)

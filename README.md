@@ -148,7 +148,8 @@ neutral state = 32767). Available in: (***condition*** | ***action***)
 
 `previousMode()` Available in: (***action***)
 
-`iterateModes(string[] modesInOrder, bool reverse)` e.g.: `iterateModes(new string[] {"Default", "Layer 1", "Layer 2"}, false)`. Available in: (***action***)
+`iterateModes(string[] modesInOrder, bool reverse)` e.g.: `"iterateModes(new string[] {"Default", "Layer 1", "Layer 2"}, false)"`. Available
+in: (***action***)
 
 `getDeviceState(string deviceGuid)` Available in: (***condition***)
 
@@ -164,15 +165,19 @@ neutral state = 32767). Available in: (***condition*** | ***action***)
 
 `getButtonRawValue(string button)` For current device. Available in: (***condition***)
 
-`stateToString()` Return printable string of state. Use it with log e.g.: `log(stateToString())`. Available in: (***condition*** | ***action***)
+`stateToString()` Return printable string of state. Use it with log e.g.: `"log(stateToString())"`. Available in: (***condition*** |
+***action***)
 
-`deviceStateToString()` Return printable string of state. Use it with log e.g.: `log(deviceStateToString())`. Available in: (***condition*** | ***action***)
+`deviceStateToString()` Return printable string of state. Use it with log e.g.: `"log(deviceStateToString())"`. Available in: (
+***condition*** | ***action***)
 
-`globalStateToString()` Return printable string of state. Use it with log e.g.: `log(globalStateToString())`. Available in: (***condition*** | ***action***)
+`globalStateToString()` Return printable string of state. Use it with log e.g.: `"log(globalStateToString())"`. Available in: (
+***condition*** | ***action***)
 
 `getDynamicStateValue(string key)` Allows to get your custom value across whole application. Available in: (***condition*** | ***action***)
 
-`setDynamicStateValue(string key, object value)` Allows to store your custom value across whole application. Available in: (***condition*** | ***action***)
+`setDynamicStateValue(string key, object value)` Allows to store your custom value across whole application. Available in: (
+***condition*** | ***action***)
 
 `keyClick(string key)` Simulate keyboard press and release. Available in: (***action***)
 
@@ -182,9 +187,15 @@ neutral state = 32767). Available in: (***condition*** | ***action***)
 
 `keyRelease(string key)` Simulate keyboard release. Available in: (***action***)
 
-`keyAutoRepeat(string key, int delay)` Simulate autorepeat keyboard press and release with delay time between clicks. Kills previous autorepeat for given key. Available in: (***action***)
+`keyAutoRepeat(string key, int delay)` Simulate autorepeat keyboard press and release with delay time between clicks. Kills previous
+autorepeat for given key. Available in: (***action***)
 
-`keyDynamicAutoRepeat(string key, int delay)` Simulate autorepeat keyboard press and release with delay time between clicks. Updates delay for given key, reusing previous autorepeat. Available in: (***action***)
+`keyDynamicAutoRepeat(string key, int delay)` Simulate autorepeat keyboard press and release with delay time between clicks. Dynamically
+change delay time. Updates delay for given key, reusing previous autorepeat. E.g.:
+`"var delay = Math.Round(1000 * (1 - Math.Abs(value))); keyDynamicAutoRepeat(\"A\", delay);"`. Available in: (***action***)
+
+`keyDynamicAutoRepeatMinMaxTime(string key, double value, int minTime, int maxTime)` Wrapper for:
+`"var delay = Math.Round(maxTime * (1 - Math.Abs(value))) + minTime; keyDynamicAutoRepeat(key, delay);"`. Available in: (***action***)
 
 `keyStopAutoRepeat(string key)` Kills autorepeat for given key. Available in: (***action***)
 
@@ -195,3 +206,67 @@ neutral state = 32767). Available in: (***condition*** | ***action***)
 `reloadJsonConfig()` Reloads json allowing you to change file without restarting application. Available in: (***action***)
 
 `exit()` Stop application. Available in: (***action***)
+
+### Examples
+
+#### Modifier key
+
+Change to "Layer 1" during key hold and return to previous when released
+
+```json5
+{
+  "Buttons0": {
+    "actions": [
+      {
+        "condition": "value == 1",
+        "action": "changeMode(\"Layer 1\")"
+      },
+      {
+        "condition": "value == 0",
+        "action": "previousMode()"
+      }
+    ]
+  },
+}
+```
+
+#### Dynamic axis autorepeat
+
+Example of how to map W | A | S | D keys to X | Y axis
+
+```json5
+{
+  "X": {
+    "actions": [
+      {
+        "condition": "value < 0",
+        "action": "keyDynamicAutoRepeatMinMaxTime(\"A\", value, 0, 1000);"
+      },
+      {
+        "condition": "value > 0",
+        "action": "keyDynamicAutoRepeatMinMaxTime(\"D\", value, 0, 1000);"
+      },
+      {
+        "condition": "value == 0",
+        "action": "keyStopAutoRepeat(\"A\"); keyStopAutoRepeat(\"D\");"
+      }
+    ]
+  },
+  "Y": {
+    "actions": [
+      {
+        "condition": "value < 0",
+        "action": "keyDynamicAutoRepeatMinMaxTime(\"W\", value, 0, 1000);"
+      },
+      {
+        "condition": "value > 0",
+        "action": "keyDynamicAutoRepeatMinMaxTime(\"S\", value, 0, 1000);"
+      },
+      {
+        "condition": "value == 0",
+        "action": "keyStopAutoRepeat(\"W\"); keyStopAutoRepeat(\"S\");"
+      }
+    ]
+  },
+}
+```

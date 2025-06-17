@@ -34,6 +34,22 @@
           }
         },
         "Default": {
+          "X": {
+            "actions": [
+              {
+                "condition": "value < 0",
+                "action": "keyDynamicAutoRepeatMinMaxTime(\"A\", value, 0, 1000);"
+              },
+              {
+                "condition": "value > 0",
+                "action": "keyDynamicAutoRepeatMinMaxTime(\"D\", value, 0, 1000);"
+              },
+              {
+                "condition": "value == 0",
+                "action": "keyStopAutoRepeat(\"A\"); keyStopAutoRepeat(\"D\");"
+              }
+            ]
+          },
           "Buttons0": {
             "actions": [
               {

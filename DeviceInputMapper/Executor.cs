@@ -28,6 +28,7 @@ public struct HelperFunctions
     public Action<string> KeyRelease { get; set; }
     public Action<string, int> KeyAutoRepeat { get; set; }
     public Action<string, int> KeyDynamicAutoRepeat { get; set; }
+    public Action<string, double, int, int> KeyDynamicAutoRepeatMinMaxTime { get; set; }
     public Action<string> KeyStopAutoRepeat { get; set; }
     public Action KeyStopAllAutoRepeat { get; set; }
 
@@ -149,6 +150,8 @@ public static class Executor
 
         var keyAutoRepeat = (string key, int delay) => Keyboard.AutoRepeat(Enum.Parse<Keys>(key), delay);
         var keyDynamicAutoRepeat = (string key, int delay) => Keyboard.DynamicAutoRepeat(Enum.Parse<Keys>(key), delay);
+        var keyDynamicAutoRepeatMinMaxTime = (string key, double value, int minTime, int maxTime) =>
+            Keyboard.DynamicAutoRepeatMinMaxTime(Enum.Parse<Keys>(key), value, minTime, maxTime);
         var keyStopAutoRepeat = (string key) => Keyboard.StopAutoRepeat(Enum.Parse<Keys>(key));
         var keyStopAllAutoRepeat = () => Keyboard.StopAllAutoRepeat();
 
@@ -191,6 +194,7 @@ public static class Executor
             KeyRelease = keyRelease,
             KeyAutoRepeat = keyAutoRepeat,
             KeyDynamicAutoRepeat = keyDynamicAutoRepeat,
+            KeyDynamicAutoRepeatMinMaxTime = keyDynamicAutoRepeatMinMaxTime,
             KeyStopAutoRepeat = keyStopAutoRepeat,
             KeyStopAllAutoRepeat = keyStopAllAutoRepeat,
 
@@ -275,6 +279,7 @@ public static class Executor
                 keyRelease = helpers.KeyRelease,
                 keyAutoRepeat = helpers.KeyAutoRepeat,
                 keyDynamicAutoRepeat = helpers.KeyDynamicAutoRepeat,
+                keyDynamicAutoRepeatMinMaxTime = helpers.KeyDynamicAutoRepeatMinMaxTime,
                 keyStopAutoRepeat = helpers.KeyStopAutoRepeat,
                 keyStopAllAutoRepeat = helpers.KeyStopAllAutoRepeat,
                 log = helpers.Log,
