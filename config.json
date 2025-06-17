@@ -13,110 +13,54 @@
     "dc041e30-414d-11f0-8001-444553540000": {
       "description": "Side Panel",
       "configs": {
-        "Layer 1": {
-          "Buttons0": {
-            "actions": [
-              {
-                "condition": "value == 1",
-                "action": "log(\"Mrusia <3\")"
-              }
-            ]
-          }
-        },
-        "Layer 2": {
-          "Buttons0": {
-            "actions": [
-              {
-                "condition": "value == 1",
-                "action": "log(\"Chuje się nie kreskuje\")"
-              }
-            ]
-          }
-        },
         "Default": {
           "X": {
             "actions": [
               {
                 "condition": "value < 0",
-                "action": "keyDynamicAutoRepeatMinMaxTime(\"A\", value, 0, 1000);"
+                "action": "keyPress(\"A\"); keyRelease(\"D\");"
               },
               {
                 "condition": "value > 0",
-                "action": "keyDynamicAutoRepeatMinMaxTime(\"D\", value, 0, 1000);"
+                "action": "keyPress(\"D\"); keyRelease(\"A\");"
               },
               {
                 "condition": "value == 0",
-                "action": "keyStopAutoRepeat(\"A\"); keyStopAutoRepeat(\"D\");"
+                "action": "keyRelease(\"A\"); keyRelease(\"D\");"
               }
             ]
           },
-          "Buttons0": {
+          "Y": {
             "actions": [
               {
-                "condition": "value == 1",
-                "action": "log(\"1\")"
-              }
-            ]
-          },
-          "Buttons1": {
-            "actions": [
-              {
-                "condition": "value == 1",
-                "action": "log(currentMode)"
-              }
-            ]
-          },
-          "Buttons2": {
-            "actions": [
-              {
-                "condition": "value == 1",
-                "action": "changeMode(\"Layer 1\")"
-              }
-            ]
-          },
-          "Buttons3": {
-            "actions": [
-              {
-                "condition": "value == 1",
-                "action": "changeMode(\"Default\")"
-              }
-            ]
-          },
-          "Buttons4": {
-            "actions": [
-              {
-                "condition": "value == 1",
-                "action": "iterateModes(new string[] {\"Default\", \"Layer 1\", \"Layer 2\"}, true)"
-              }
-            ]
-          },
-          "Buttons5": {
-            "actions": [
-              {
-                "condition": "value == 0",
-                "action": "previousMode()"
+                "condition": "value < 0",
+                "action": "keyDynamicAutoRepeatHoldMinMaxTime(\"W\", value, 1000, 1, 200); keyStopAutoRepeat(\"S\");"
               },
               {
-                "condition": "value == 1",
-                "action": "previousMode()"
+                "condition": "value > 0",
+                "action": "keyDynamicAutoRepeatHoldMinMaxTime(\"S\", value, 1000, 1, 200); keyStopAutoRepeat(\"W\"); "
+              },
+              {
+                "condition": "value == 0",
+                "action": "keyStopAutoRepeat(\"W\"); keyStopAutoRepeat(\"S\");"
               }
             ]
           },
-          "Buttons18": {
+          "Buttons21": {
             "actions": [
               {
                 "action": "log(globalStateToString())"
               }
             ]
           },
-          "Buttons19": {
+          "Buttons22": {
             "actions": [
               {
                 "action": "log(stateToString())"
               }
             ]
           },
-          "Buttons20": {
+          "Buttons23": {
             "actions": [
               {
                 "condition": "value == 1",

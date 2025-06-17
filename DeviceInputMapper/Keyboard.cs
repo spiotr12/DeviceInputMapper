@@ -17,10 +17,10 @@ public class Keyboard
         keybd_event((byte)key, 0, KEY_UP_EVENT, 0);
     }
 
-    public static void Hold(Keys key, int delay)
+    public static void Hold(Keys key, int holdTime)
     {
         keybd_event((byte)key, 0, KEY_DOWN_EVENT, 0);
-        Thread.Sleep(delay);
+        Thread.Sleep(holdTime);
         keybd_event((byte)key, 0, KEY_UP_EVENT, 0);
     }
 
@@ -36,15 +36,15 @@ public class Keyboard
 
     private static IDictionary<string, AutoRepeatState> _autoRepeatState = new Dictionary<string, AutoRepeatState>();
 
-    public static void AutoRepeat(Keys key, int delay)
+    public static void AutoRepeatClick(Keys key, int delay)
     {
         StopAutoRepeat(key);
-        DynamicAutoRepeat(key, delay);
+        DynamicAutoRepeatClick(key, delay);
     }
 
-    public static void DynamicAutoRepeat(Keys key, int delay)
+    public static void DynamicAutoRepeatClick(Keys key, int delay)
     {
-        var thread = new Thread(AutoRepeatFn);
+        var thread = new Thread(AutoRepeatClickFn);
         var cts = new CancellationTokenSource();
 
         if (_autoRepeatState.ContainsKey(key.ToString()))
@@ -65,13 +65,13 @@ public class Keyboard
         }
     }
 
-    public static void DynamicAutoRepeatMinMaxTime(Keys key, double value, int minTime, int maxTime)
+    public static void DynamicAutoRepeatClickMinMaxTime(Keys key, double value, int minTime, int maxTime)
     {
         var delay = (int)Math.Round(1000 * (1 - Math.Abs(value))) + minTime;
-        DynamicAutoRepeat(key, delay);
+        DynamicAutoRepeatClick(key, delay);
     }
 
-    private static void AutoRepeatFn(object? obj)
+    private static void AutoRepeatClickFn(object? obj)
     {
         if (obj == null)
             return;
@@ -87,6 +87,67 @@ public class Keyboard
             {
                 cts = state.Cts;
                 Click(key);
+                Thread.Sleep(state.Delay);
+            }
+            else
+            {
+                selfKill = true;
+            }
+        }
+    }
+
+    public static void AutoRepeatHold(Keys key, int delay, int holdTime)
+    {
+        StopAutoRepeat(key);
+        DynamicAutoRepeatHold(key, delay, holdTime);
+    }
+
+    public static void DynamicAutoRepeatHold(Keys key, int delay, int holdTime)
+    {
+        var thread = new Thread(AutoRepeatHoldFn);
+        var cts = new CancellationTokenSource();
+
+        if (_autoRepeatState.ContainsKey(key.ToString()))
+        {
+            var state = _autoRepeatState[key.ToString()];
+            _autoRepeatState[key.ToString()] = state with { Delay = delay };
+        }
+        else
+        {
+            _autoRepeatState.Add(key.ToString(), new AutoRepeatState
+            {
+                Cts = cts,
+                Thread = thread,
+                Delay = delay,
+            });
+
+            thread.Start(new AutoRepeatParameters { Cts = cts, Key = key, Delay = delay, HoldTime = holdTime });
+        }
+    }
+
+    public static void DynamicAutoRepeatHoldMinMaxTime(Keys key, double value, int holdTime, int minTime, int maxTime)
+    {
+        var delay = (int)Math.Round(1000 * (1 - Math.Abs(value))) + minTime;
+        DynamicAutoRepeatHold(key, delay, holdTime);
+    }
+
+    private static void AutoRepeatHoldFn(object? obj)
+    {
+        if (obj == null)
+            return;
+
+        var parameters = (AutoRepeatParameters)obj;
+        var key = parameters.Key;
+        var cts = parameters.Cts;
+        var holdTime = parameters.HoldTime ?? 0;
+        var selfKill = false;
+
+        while (!cts.IsCancellationRequested && !selfKill)
+        {
+            if (_autoRepeatState.TryGetValue(key.ToString(), out var state))
+            {
+                cts = state.Cts;
+                Hold(key, holdTime);
                 Thread.Sleep(state.Delay);
             }
             else
@@ -125,6 +186,7 @@ public struct AutoRepeatParameters
 {
     public Keys Key;
     public int Delay;
+    public int? HoldTime { get; set; }
     public CancellationTokenSource Cts;
 }
 

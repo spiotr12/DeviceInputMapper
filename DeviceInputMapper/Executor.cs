@@ -26,9 +26,12 @@ public struct HelperFunctions
     public Action<string, int> KeyHold { get; set; }
     public Action<string> KeyPress { get; set; }
     public Action<string> KeyRelease { get; set; }
-    public Action<string, int> KeyAutoRepeat { get; set; }
-    public Action<string, int> KeyDynamicAutoRepeat { get; set; }
-    public Action<string, double, int, int> KeyDynamicAutoRepeatMinMaxTime { get; set; }
+    public Action<string, int> KeyAutoRepeatClick { get; set; }
+    public Action<string, int> KeyDynamicAutoRepeatClick { get; set; }
+    public Action<string, double, int, int> KeyDynamicAutoRepeatClickMinMaxTime { get; set; }
+    public Action<string, int, int> KeyAutoRepeatHold { get; set; }
+    public Action<string, int, int> KeyDynamicAutoRepeatHold { get; set; }
+    public Action<string, double, int, int, int> KeyDynamicAutoRepeatHoldMinMaxTime { get; set; }
     public Action<string> KeyStopAutoRepeat { get; set; }
     public Action KeyStopAllAutoRepeat { get; set; }
 
@@ -144,14 +147,22 @@ public static class Executor
         var setDynamicStateValue = (string key, object value) => { DynamicState[key] = value; };
 
         var keyClick = (string key) => Keyboard.Click(Enum.Parse<Keys>(key));
-        var keyHold = (string key, int delay) => Keyboard.Hold(Enum.Parse<Keys>(key), delay);
+        var keyHold = (string key, int holdTime) => Keyboard.Hold(Enum.Parse<Keys>(key), holdTime);
         var keyPress = (string key) => Keyboard.Press(Enum.Parse<Keys>(key));
         var keyRelease = (string key) => Keyboard.Release(Enum.Parse<Keys>(key));
 
-        var keyAutoRepeat = (string key, int delay) => Keyboard.AutoRepeat(Enum.Parse<Keys>(key), delay);
-        var keyDynamicAutoRepeat = (string key, int delay) => Keyboard.DynamicAutoRepeat(Enum.Parse<Keys>(key), delay);
-        var keyDynamicAutoRepeatMinMaxTime = (string key, double value, int minTime, int maxTime) =>
-            Keyboard.DynamicAutoRepeatMinMaxTime(Enum.Parse<Keys>(key), value, minTime, maxTime);
+        var keyAutoRepeatClick = (string key, int delay) => Keyboard.AutoRepeatClick(Enum.Parse<Keys>(key), delay);
+        var keyDynamicAutoRepeatClick = (string key, int delay) => Keyboard.DynamicAutoRepeatClick(Enum.Parse<Keys>(key), delay);
+        var keyDynamicAutoRepeatClickMinMaxTime = (string key, double value, int minTime, int maxTime) =>
+            Keyboard.DynamicAutoRepeatClickMinMaxTime(Enum.Parse<Keys>(key), value, minTime, maxTime);
+
+        var keyAutoRepeatHold = (string key, int delay, int holdTime) => Keyboard.AutoRepeatHold(Enum.Parse<Keys>(key), delay, holdTime);
+        var keyDynamicAutoRepeatHold = (string key, int delay, int holdTime) =>
+            Keyboard.DynamicAutoRepeatHold(Enum.Parse<Keys>(key), delay, holdTime);
+        var keyDynamicAutoRepeatHoldMinMaxTime = (string key, double value, int holdTime, int minTime, int maxTime) =>
+            Keyboard.DynamicAutoRepeatHoldMinMaxTime(Enum.Parse<Keys>(key), value, holdTime, minTime, maxTime);
+
+
         var keyStopAutoRepeat = (string key) => Keyboard.StopAutoRepeat(Enum.Parse<Keys>(key));
         var keyStopAllAutoRepeat = () => Keyboard.StopAllAutoRepeat();
 
@@ -192,9 +203,15 @@ public static class Executor
             KeyHold = keyHold,
             KeyPress = keyPress,
             KeyRelease = keyRelease,
-            KeyAutoRepeat = keyAutoRepeat,
-            KeyDynamicAutoRepeat = keyDynamicAutoRepeat,
-            KeyDynamicAutoRepeatMinMaxTime = keyDynamicAutoRepeatMinMaxTime,
+
+            KeyAutoRepeatClick = keyAutoRepeatClick,
+            KeyDynamicAutoRepeatClick = keyDynamicAutoRepeatClick,
+            KeyDynamicAutoRepeatClickMinMaxTime = keyDynamicAutoRepeatClickMinMaxTime,
+
+            KeyAutoRepeatHold = keyAutoRepeatHold,
+            KeyDynamicAutoRepeatHold = keyDynamicAutoRepeatHold,
+            KeyDynamicAutoRepeatHoldMinMaxTime = keyDynamicAutoRepeatHoldMinMaxTime,
+
             KeyStopAutoRepeat = keyStopAutoRepeat,
             KeyStopAllAutoRepeat = keyStopAllAutoRepeat,
 
@@ -277,9 +294,12 @@ public static class Executor
                 keyHold = helpers.KeyHold,
                 keyPress = helpers.KeyPress,
                 keyRelease = helpers.KeyRelease,
-                keyAutoRepeat = helpers.KeyAutoRepeat,
-                keyDynamicAutoRepeat = helpers.KeyDynamicAutoRepeat,
-                keyDynamicAutoRepeatMinMaxTime = helpers.KeyDynamicAutoRepeatMinMaxTime,
+                keyAutoRepeatClick = helpers.KeyAutoRepeatClick,
+                keyDynamicAutoRepeatClick = helpers.KeyDynamicAutoRepeatClick,
+                keyDynamicAutoRepeatClickMinMaxTime = helpers.KeyDynamicAutoRepeatClickMinMaxTime,
+                keyAutoRepeatHold = helpers.KeyAutoRepeatHold,
+                keyDynamicAutoRepeatHold = helpers.KeyDynamicAutoRepeatHold,
+                keyDynamicAutoRepeatHoldMinMaxTime = helpers.KeyDynamicAutoRepeatHoldMinMaxTime,
                 keyStopAutoRepeat = helpers.KeyStopAutoRepeat,
                 keyStopAllAutoRepeat = helpers.KeyStopAllAutoRepeat,
                 log = helpers.Log,
