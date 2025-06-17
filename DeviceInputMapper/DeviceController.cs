@@ -25,17 +25,18 @@ public class DeviceController
         var rawJson = File.ReadAllText(filePath);
         var deserializeConfig = JsonConvert.DeserializeObject<Config>(rawJson);
 
+        if (deserializeConfig == null)
+        {
+            throw new Exception($"Config file \"{filePath}\" could not be parsed.");
+        }
+
         var mapperConfiguration = new MapperConfiguration(cfg => cfg.CreateMap<DeviceInstance, DeviceConfig>());
         var mapper = mapperConfiguration.CreateMapper();
 
-        if (deserializeConfig?.DefaultMode == null)
-        {
-            if (deserializeConfig != null) deserializeConfig.DefaultMode = "Default";
-        }
 
-        if (deserializeConfig?.Modes[deserializeConfig.DefaultMode] == null)
+        if (!deserializeConfig.Modes.ContainsKey(deserializeConfig.DefaultMode))
         {
-            deserializeConfig?.Modes.Add(deserializeConfig.DefaultMode, new ModeConfig());
+            deserializeConfig.Modes.Add(deserializeConfig.DefaultMode, new ModeConfig());
         }
 
         foreach (var (id, deviceConfig) in deserializeConfig.Devices)
@@ -50,13 +51,13 @@ public class DeviceController
             }
             catch (Exception e)
             {
-                // ignore
+                // Console.WriteLine(e);
             }
 
             if (deviceConfig.Configs == null || deviceConfig.Configs.Count == 0)
             {
-                deviceConfig.Configs = new Dictionary<string, IDictionary<string, ButtonConfig>>();
-                deviceConfig.Configs.Add("Default", new Dictionary<string, ButtonConfig>());
+                deviceConfig.Configs = new Dictionary<string, IDictionary<string, InputMappingConfig>>();
+                deviceConfig.Configs.Add("Default", new Dictionary<string, InputMappingConfig>());
             }
             else
             {
@@ -124,6 +125,6 @@ public class DeviceController
         Console.WriteLine("Type:\t\t\t {0}", device.Type);
         Console.WriteLine("Subtype:\t\t {0}", device.Subtype);
         Console.WriteLine("Usage:\t\t\t {0}", device.Usage);
-        Console.WriteLine("UsagePage:\t\t\t {0}", device.UsagePage);
+        Console.WriteLine("UsagePage:\t\t {0}", device.UsagePage);
     }
 }

@@ -1,9 +1,7 @@
 {
   "defaultMode": "Default",
   "modes": {
-    "Default": {
-      "parent": null
-    },
+    "Default": {},
     "Layer 1": {
       "parent": "Default"
     },
@@ -20,7 +18,7 @@
             "actions": [
               {
                 "condition": "value == 1",
-                "action": "log(\"9\")"
+                "action": "log(\"Mrusia <3\")"
               }
             ]
           }
@@ -72,7 +70,7 @@
             "actions": [
               {
                 "condition": "value == 1",
-                "action": "iterateModes(new string[] {\"Default\", \"Layer 1\", \"Layer 2\"})"
+                "action": "iterateModes(new string[] {\"Default\", \"Layer 1\", \"Layer 2\"}, true)"
               }
             ]
           },
@@ -125,6 +123,7 @@
       "_usagePage": "Generic"
     },
     "One": {
+      "description": null,
       "configs": {
         "Default": {
           "A": {

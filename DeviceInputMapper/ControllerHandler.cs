@@ -113,7 +113,7 @@ class ControllerHandler : Handler
         }
     }
 
-    protected IDictionary<string, ButtonConfig> GetCurrentModeConfig()
+    protected IDictionary<string, InputMappingConfig> GetCurrentModeConfig()
     {
         if (_config.Configs == null || _config.Configs[State.CurrentMode] == null)
         {

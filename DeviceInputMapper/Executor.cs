@@ -7,7 +7,7 @@ public struct HelperFunctions
 {
     public Action<string> ChangeMode { get; set; }
     public Action PreviousMode { get; set; }
-    public Action<IEnumerable<string>> IterateModes { get; set; }
+    public Action<IEnumerable<string>, bool> IterateModes { get; set; }
 
     public Func<string, IDictionary<string, StateValue>> GetDeviceState { get; set; }
     public Func<string, string, StateValue> GetDeviceButtonState { get; set; }
@@ -58,26 +58,23 @@ public static class Executor
 
         var previousMode = () => { changeMode(State.PreviousMode ?? State.Config?.DefaultMode ?? "Default"); };
 
-        var iterateModes = (IEnumerable<string> modesOrder) =>
+        var iterateModes = (IEnumerable<string> modesOrder, bool reverse) =>
         {
             var list = new List<string>(modesOrder);
             var modeIndex = list.IndexOf(State.CurrentMode);
-            int nextIndex;
-            if (modeIndex == -1 || modeIndex == list.Count - 1)
+            int nextIndex = reverse ? modeIndex - 1 : modeIndex + 1;
+
+            if (nextIndex < 0 || modeIndex > list.Count - 1)
             {
-                nextIndex = 0;
-            }
-            else
-            {
-                nextIndex = modeIndex + 1;
+                nextIndex = reverse ? list.Count - 1 : 0;
             }
 
             changeMode(list[nextIndex]);
         };
 
-        var getDeviceState = (string identifier) =>
+        var getDeviceState = (string deviceGuid) =>
         {
-            if (State.Devices.TryGetValue(identifier, out var stateValue))
+            if (State.Devices.TryGetValue(deviceGuid, out var stateValue))
             {
                 return stateValue;
             }
@@ -85,9 +82,9 @@ public static class Executor
             return new Dictionary<string, StateValue>();
         };
 
-        var getDeviceButtonState = (string identifier, string button) =>
+        var getDeviceButtonState = (string deviceGuid, string button) =>
         {
-            if (State.Devices.TryGetValue(identifier, out var st))
+            if (State.Devices.TryGetValue(deviceGuid, out var st))
             {
                 if (st.TryGetValue(button, out var stateValue))
                 {
@@ -102,8 +99,8 @@ public static class Executor
             return new StateValue { value = double.NaN, rawValue = double.NaN };
         };
 
-        var getDeviceButtonValue = (string identifier, string button) => { return getDeviceButtonState(identifier, button).value; };
-        var getDeviceButtonRawValue = (string identifier, string button) => { return getDeviceButtonState(identifier, button).rawValue; };
+        var getDeviceButtonValue = (string deviceGuid, string button) => { return getDeviceButtonState(deviceGuid, button).value; };
+        var getDeviceButtonRawValue = (string deviceGuid, string button) => { return getDeviceButtonState(deviceGuid, button).rawValue; };
 
         State.Devices.TryGetValue(id, out var deviceState);
         var getButtonState = (string button) =>
@@ -134,9 +131,9 @@ public static class Executor
             {
                 return DynamicState[key];
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // ignored
+                Console.WriteLine(e);
             }
 
             return null;
@@ -156,7 +153,7 @@ public static class Executor
         var keyStopAllAutoRepeat = () => Keyboard.StopAllAutoRepeat();
 
         // Log function
-        var log = (object msg) => Console.WriteLine(msg);
+        var log = (object obj) => Console.WriteLine(obj);
 
         // Test function
         var test = () =>
@@ -218,6 +215,7 @@ public static class Executor
             return Eval.Execute<bool>(condition, new
             {
                 id,
+                button,
                 value,
                 rawValue,
                 currentMode = State.CurrentMode,
@@ -236,8 +234,6 @@ public static class Executor
                 getDynamicStateValue = helpers.GetDynamicStateValue,
                 setDynamicStateValue = helpers.SetDynamicStateValue,
                 log = helpers.Log,
-                reloadJsonConfig = helpers.ReloadJsonConfig,
-                exit = helpers.Exit,
                 test = helpers.Test,
             });
         }
@@ -259,6 +255,7 @@ public static class Executor
             Eval.Execute(action, new
             {
                 id,
+                button,
                 value,
                 rawValue,
                 currentMode = State.CurrentMode,

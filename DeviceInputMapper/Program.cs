@@ -13,51 +13,70 @@ class Program
     [STAThread]
     static async Task Main(string[] args)
     {
-        Thread.CurrentThread.Name = "Main";
-
-        var directInput = new DirectInput();
-        var configFilePath = args[0];
-
-        var deviceController = new DeviceController(directInput, configFilePath);
-        deviceController.PrintAllDevicesInfo();
-
-        EventBus.Queue.Subscribe(async void (ev) =>
+        try
         {
-            if (ev.Message != null)
+            Thread.CurrentThread.Name = "Main";
+
+            var directInput = new DirectInput();
+
+            var configFilePath = args[0];
+
+            if (!File.Exists(configFilePath))
             {
-                if (ev.Message.Equals(Event.StartMessage))
-                {
-                    Task.Run(() => LoadAndRun(directInput, deviceController));
-                }
-
-                if (ev.Message.Equals(Event.ReloadMessage))
-                {
-                    foreach (var (task, cts) in _allHandlersTasks)
-                    {
-                        cts.Cancel();
-                    }
-
-                    _allHandlersTasks.Clear();
-                    Task.Run(() => LoadAndRun(directInput, deviceController));
-                }
-
-                if (ev.Message.Equals(Event.ExitMessage))
-                {
-                    foreach (var (task, cts) in _allHandlersTasks)
-                    {
-                        cts.Cancel();
-                    }
-
-                    _allHandlersTasks.Clear();
-
-                    EventBus.Complete();
-                }
+                File.Create(configFilePath).Dispose();
+                File.WriteAllText(configFilePath, "{}");
             }
-        });
 
-        EventBus.Emit(Event.Start);
+            var deviceController = new DeviceController(directInput, configFilePath);
+            deviceController.PrintAllDevicesInfo();
 
-        await EventBus.Queue;
+            EventBus.Queue.Subscribe(async void (ev) =>
+            {
+                if (ev.Message != null)
+                {
+                    if (ev.Message.Equals(Event.StartMessage))
+                    {
+                        Task.Run(() => LoadAndRun(directInput, deviceController));
+                    }
+
+                    if (ev.Message.Equals(Event.ReloadMessage))
+                    {
+                        foreach (var (task, cts) in _allHandlersTasks)
+                        {
+                            cts.Cancel();
+                        }
+
+                        _allHandlersTasks.Clear();
+                        Task.Run(() => LoadAndRun(directInput, deviceController));
+                    }
+
+                    if (ev.Message.Equals(Event.ExitMessage))
+                    {
+                        foreach (var (task, cts) in _allHandlersTasks)
+                        {
+                            cts.Cancel();
+                        }
+
+                        _allHandlersTasks.Clear();
+
+                        EventBus.Complete();
+                    }
+                }
+            });
+
+            EventBus.Emit(Event.Start);
+
+            await EventBus.Queue;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
+        }
     }
 
     private static async Task LoadAndRun(DirectInput directInput, DeviceController deviceController)
@@ -80,7 +99,7 @@ class Program
                     var device = deviceController.FindByInstanceGuid(instanceGuid);
                     if (device != null)
                     {
-                        if (deviceConfig.InputDeviceType == InputDeviceType.Joystick)
+                        if (deviceConfig.InputDeviceType == InputDeviceType.Joystick || deviceConfig.InputDeviceType == InputDeviceType.Gamepad)
                         {
                             var joystick = new Joystick(directInput, instanceGuid);
                             handler = new JoystickHandler(id, deviceConfig, joystick);
@@ -102,13 +121,14 @@ class Program
             }
             catch (Exception e)
             {
-                // ignored
+                Console.WriteLine(e);
             }
 
             // Controllers
             try
             {
-                if (Enum.TryParse<UserIndex>(id, out UserIndex userIndex))
+                if (deviceConfig.InputDeviceType == InputDeviceType.Controller
+                    && Enum.TryParse<UserIndex>(id, out var userIndex))
                 {
                     var controller = new Controller(userIndex);
                     handler = new ControllerHandler(id, deviceConfig, controller);
@@ -116,7 +136,7 @@ class Program
             }
             catch (Exception e)
             {
-                // ignored
+                Console.WriteLine(e);
             }
 
             if (handler != null)

@@ -32,25 +32,32 @@ public class Config
             return copy;
         }
 
+        // TODO: Set order if
+
         foreach (var (mode, modeConfig) in copy.Modes)
         {
             if (modeConfig.Parent != null)
             {
+                if (mode.Equals(modeConfig.Parent))
+                {
+                    throw new Exception($"Mode {mode} cannot inherit from itself");
+                }
+
                 foreach (var (id, deviceConfig) in copy.Devices)
                 {
                     if (deviceConfig.Configs == null)
                     {
-                        deviceConfig.Configs = new Dictionary<string, IDictionary<string, ButtonConfig>>();
+                        deviceConfig.Configs = new Dictionary<string, IDictionary<string, InputMappingConfig>>();
                     }
 
                     if (!deviceConfig.Configs.ContainsKey(modeConfig.Parent))
                     {
-                        deviceConfig.Configs[modeConfig.Parent] = new Dictionary<string, ButtonConfig>();
+                        deviceConfig.Configs[modeConfig.Parent] = new Dictionary<string, InputMappingConfig>();
                     }
 
                     if (!deviceConfig.Configs.ContainsKey(mode))
                     {
-                        deviceConfig.Configs[mode] = new Dictionary<string, ButtonConfig>();
+                        deviceConfig.Configs[mode] = new Dictionary<string, InputMappingConfig>();
                     }
 
                     var source = deviceConfig.Configs?[modeConfig.Parent];
@@ -86,14 +93,12 @@ public class Config
 
 public class DeviceConfig
 {
-    [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-    public string? Description;
+    [JsonProperty("description")] public string? Description;
 
     [JsonProperty("configs", NullValueHandling = NullValueHandling.Ignore)]
-    public IDictionary<string, IDictionary<string, ButtonConfig>>? Configs;
+    public IDictionary<string, IDictionary<string, InputMappingConfig>>? Configs;
 
-    [JsonProperty("inputDeviceType", NullValueHandling = NullValueHandling.Ignore)]
-    public string? InputDeviceType;
+    [JsonProperty("inputDeviceType")] public string? InputDeviceType;
 
 
     [JsonProperty("_instanceName", NullValueHandling = NullValueHandling.Ignore)]
@@ -127,7 +132,7 @@ public class DeviceConfig
     public string? UsagePage;
 }
 
-public class ButtonConfig
+public class InputMappingConfig
 {
     [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
     public string? label;
@@ -145,10 +150,10 @@ public class ButtonConfig
     public object? MaxRawValue;
 
     [JsonProperty("actions", NullValueHandling = NullValueHandling.Ignore)]
-    public IEnumerable<InputConfig> Actions = new List<InputConfig>();
+    public IEnumerable<ActionConfig> Actions = new List<ActionConfig>();
 }
 
-public class InputConfig
+public class ActionConfig
 {
     [JsonProperty("condition", NullValueHandling = NullValueHandling.Ignore)]
     public string? Condition;
@@ -159,5 +164,6 @@ public class InputConfig
 
 public class ModeConfig
 {
-    [JsonProperty("parent")] public string? Parent;
+    [JsonProperty("parent", NullValueHandling = NullValueHandling.Ignore)]
+    public string? Parent;
 }
