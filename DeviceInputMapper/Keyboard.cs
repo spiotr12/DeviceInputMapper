@@ -130,7 +130,16 @@ public class Keyboard
     public static void DynamicAutoRepeatHoldMinMaxTime(Keys key, double value, int minTime, int maxTime, int holdTime)
     {
         var delay = (int)Math.Round(maxTime * (1 - Math.Abs(value))) + minTime;
-        DynamicAutoRepeatHold(key, delay, holdTime);
+        var absoluteDelay = delay < 0 ? 0 : delay;
+        int newHoldTime = holdTime;
+        if (holdTime == -1)
+        {
+            var maxHoldTime = Math.Abs(minTime) + Math.Abs(maxTime);
+            newHoldTime = maxHoldTime - (int)Math.Round(maxHoldTime * (1 - Math.Abs(value)));
+            Console.WriteLine(newHoldTime);
+        }
+
+        DynamicAutoRepeatHold(key, absoluteDelay, newHoldTime);
     }
 
     private static void AutoRepeatHoldFn(object? obj)
@@ -149,26 +158,26 @@ public class Keyboard
             if (_autoRepeatState.TryGetValue(key.ToString(), out var state))
             {
                 cts = state.Cts;
-                Console.WriteLine($"{state.Delay}, {state.PreviousDelay}");
+                // Console.WriteLine($"{state.Delay}, {state.PreviousDelay}");
 
                 if (state.Delay <= 0 && !state.HoldPressed)
                 {
-                    Console.WriteLine("Press");
-                    _autoRepeatState[key.ToString()] = state with { HoldPressed = true};
+                    // Console.WriteLine("Press");
+                    _autoRepeatState[key.ToString()] = state with { HoldPressed = true };
                     Press(key);
                 }
-                else if(state.Delay > 0 && state.HoldPressed)
+                else if (state.Delay > 0 && state.HoldPressed)
                 {
-                    Console.WriteLine("Release");
-                    _autoRepeatState[key.ToString()] = state with { HoldPressed = false};
+                    // Console.WriteLine("Release");
+                    _autoRepeatState[key.ToString()] = state with { HoldPressed = false };
                     Release(key);
                 }
 
                 if (state.Delay > 0)
                 {
-                    Console.WriteLine("Hold start");
+                    // Console.WriteLine("Hold start");
                     Hold(key, holdTime);
-                    Console.WriteLine("Hold end");
+                    // Console.WriteLine("Hold end");
                     Thread.Sleep(state.Delay >= 0 ? state.Delay : 0);
                 }
             }

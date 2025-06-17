@@ -225,15 +225,18 @@ Dynamically change delay time. Updates delay for given key, reusing previous aut
 `keyDynamicAutoRepeatClickMinMaxTime(string key, double value, int minTime, int maxTime)` Wrapper for:
 `"var delay = Math.Round(maxTime * (1 - Math.Abs(value))) + minTime; keyDynamicAutoRepeatClick(key, delay);"`. Available in: (***action***)
 
-`keyAutoRepeatHold(string key, int delay, int holdTime)` Simulate autorepeat keyboard press and release with delay time between clicks. Kills previous
+`keyAutoRepeatHold(string key, int delay, int holdTime)` Simulate autorepeat keyboard press and release with delay time between clicks.
+Kills previous
 autorepeat for given key. Available in: (***action***)
 
-`keyDynamicAutoRepeatHold(string key, int delay, int holdTime)` Simulate autorepeat keyboard press and release with delay time between clicks.
+`keyDynamicAutoRepeatHold(string key, int delay, int holdTime)` Simulate autorepeat keyboard press and release with delay time between
+clicks.
 Dynamically change delay time. Updates delay for given key, reusing previous autorepeat. E.g.:
 `"var delay = Math.Round(1000 * (1 - Math.Abs(value))); keyDynamicAutoRepeatHold(\"A\", delay);"`. Available in: (***action***)
 
 `keyDynamicAutoRepeatHoldMinMaxTime(string key, double value, int minTime, int maxTime, int holdTime)` Wrapper for:
-`"var delay = Math.Round(maxTime * (1 - Math.Abs(value))) + minTime; keyDynamicAutoRepeatHold(key, delay);"`. Available in: (***action***)
+`"var delay = Math.Round(maxTime * (1 - Math.Abs(value))) + minTime; keyDynamicAutoRepeatHold(key, delay, holdTime);"`. If `holdTime` is -1
+then the holdTime adjust automatically based of the minTime and maxTime difference. Higher value = longer hold. Available in: (***action***)
 
 `keyStopAutoRepeat(string key)` Kills autorepeat for given key. Available in: (***action***)
 
