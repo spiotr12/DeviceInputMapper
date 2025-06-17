@@ -246,3 +246,17 @@ Example of how to map W | A | S | D keys to X | Y axis
   },
 }
 ```
+
+## Development and contribution
+
+Hi, I'm Peter. This is my first "released" project in C#. (I'm generally angular developer).
+
+DIM is my attempt to create something like Joystick Gremlin. It was a form of challenge to test how hard it is to make something like JG. 
+
+If you find it useful, find a bug or improvement - just write to me. I would gladly learn something. 
+
+## TODO List
+
+- mouse clicking emulation
+- vJoy support
+- anything else...
