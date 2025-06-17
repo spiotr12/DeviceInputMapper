@@ -81,74 +81,82 @@ class Program
 
     private static async Task LoadAndRun(DirectInput directInput, DeviceController deviceController)
     {
-        Thread.Sleep(500);
-        Console.WriteLine("Starting...");
-        var rawConfig = deviceController.LoadConfig();
-        var config = rawConfig.ParseConfig();
-        State.Config = config;
-
-        foreach (var (id, deviceConfig) in config.Devices)
+        try
         {
-            Handler handler = null;
+            Thread.Sleep(500);
+            Console.WriteLine("Starting...");
+            var rawConfig = deviceController.LoadConfig();
+            var config = rawConfig.ParseConfig();
+            State.Config = config;
 
-            // DirectInputDevices
-            try
+            foreach (var (id, deviceConfig) in config.Devices)
             {
-                if (Guid.TryParse(id, out var instanceGuid))
+                Handler handler = null;
+
+                // DirectInputDevices
+                try
                 {
-                    var device = deviceController.FindByInstanceGuid(instanceGuid);
-                    if (device != null)
+                    if (Guid.TryParse(id, out var instanceGuid))
                     {
-                        if (deviceConfig.InputDeviceType == InputDeviceType.Joystick || deviceConfig.InputDeviceType == InputDeviceType.Gamepad)
+                        var device = deviceController.FindByInstanceGuid(instanceGuid);
+                        if (device != null)
                         {
-                            var joystick = new Joystick(directInput, instanceGuid);
-                            handler = new JoystickHandler(id, deviceConfig, joystick);
-                        }
+                            if (deviceConfig.InputDeviceType == InputDeviceType.Joystick ||
+                                deviceConfig.InputDeviceType == InputDeviceType.Gamepad)
+                            {
+                                var joystick = new Joystick(directInput, instanceGuid);
+                                handler = new JoystickHandler(id, deviceConfig, joystick);
+                            }
 
-                        if (deviceConfig.InputDeviceType == InputDeviceType.Keyboard)
-                        {
-                            var keyboard = new SharpDX.DirectInput.Keyboard(directInput);
-                            handler = new KeyboardHandler(id, deviceConfig, keyboard);
-                        }
+                            if (deviceConfig.InputDeviceType == InputDeviceType.Keyboard)
+                            {
+                                var keyboard = new SharpDX.DirectInput.Keyboard(directInput);
+                                handler = new KeyboardHandler(id, deviceConfig, keyboard);
+                            }
 
-                        if (deviceConfig.InputDeviceType == InputDeviceType.Mouse)
-                        {
-                            var mouse = new SharpDX.DirectInput.Mouse(directInput);
-                            handler = new MouseHandler(id, deviceConfig, mouse);
+                            if (deviceConfig.InputDeviceType == InputDeviceType.Mouse)
+                            {
+                                var mouse = new SharpDX.DirectInput.Mouse(directInput);
+                                handler = new MouseHandler(id, deviceConfig, mouse);
+                            }
                         }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
-            // Controllers
-            try
-            {
-                if (deviceConfig.InputDeviceType == InputDeviceType.Controller
-                    && Enum.TryParse<UserIndex>(id, out var userIndex))
+                catch (Exception e)
                 {
-                    var controller = new Controller(userIndex);
-                    handler = new ControllerHandler(id, deviceConfig, controller);
+                    Console.WriteLine(e);
+                }
+
+                // Controllers
+                try
+                {
+                    if (deviceConfig.InputDeviceType == InputDeviceType.Controller
+                        && Enum.TryParse<UserIndex>(id, out var userIndex))
+                    {
+                        var controller = new Controller(userIndex);
+                        handler = new ControllerHandler(id, deviceConfig, controller);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
+                if (handler != null)
+                {
+                    handler.EnableLogging = _enableGlobalLogging;
+                    var prepared = handler.Prepare();
+                    prepared.task.Start();
+                    _allHandlersTasks.Add(prepared);
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
 
-            if (handler != null)
-            {
-                handler.EnableLogging = _enableGlobalLogging;
-                var prepared = handler.Prepare();
-                prepared.task.Start();
-                _allHandlersTasks.Add(prepared);
-            }
+            await Task.WhenAll(_allHandlersTasks.Select(t => t.task));
         }
-
-        await Task.WhenAll(_allHandlersTasks.Select(t => t.task));
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
 
         Console.WriteLine("Finished");
     }

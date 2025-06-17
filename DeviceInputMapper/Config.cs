@@ -32,7 +32,12 @@ public class Config
             return copy;
         }
 
-        // TODO: Set order if
+        // At least one must not have parent
+        var atLeastOneMasterMode = Modes.Select(m => m.Value).Any(c => c.Parent == null);
+        if (!atLeastOneMasterMode)
+        {
+            throw new Exception("At least one mode must be a master (not have a parent)");
+        }
 
         foreach (var (mode, modeConfig) in copy.Modes)
         {
@@ -40,7 +45,7 @@ public class Config
             {
                 if (mode.Equals(modeConfig.Parent))
                 {
-                    throw new Exception($"Mode {mode} cannot inherit from itself");
+                    throw new Exception($"Mode \"{mode}\" cannot inherit from itself");
                 }
 
                 foreach (var (id, deviceConfig) in copy.Devices)
