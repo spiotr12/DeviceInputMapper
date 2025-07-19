@@ -80,13 +80,27 @@ abstract class DirectInputHandler<T, TRaw, TUpdate> : Handler
 
     protected virtual void Handle(TUpdate state, string button, double value, object rawValue)
     {
+        var processAllowed = State.Config?.ForProcesses == null ||
+                             State.Config.ForProcesses.Contains(Window.GetForegroundWindowFilePath());
+
         if (GetCurrentModeConfig().TryGetValue(button, out var buttonConfig))
         {
             foreach (var action in buttonConfig.Actions)
             {
-                if (Executor.ParseCondition(action.Condition, _id, button, value, rawValue))
+                if (processAllowed)
                 {
-                    Executor.ParseAction(action.Action, _id, button, value, rawValue);
+                    if (EnableLogging)
+                        Console.WriteLine($"Process file: ${Window.GetForegroundWindowFilePath()}");
+
+                    if (Executor.ParseCondition(action.Condition, _id, button, value, rawValue))
+                    {
+                        Executor.ParseAction(action.Action, _id, button, value, rawValue);
+                    }
+                }
+                else
+                {
+                    if (EnableLogging)
+                        Console.WriteLine($"Process file: ${Window.GetForegroundWindowFilePath()}");
                 }
             }
         }

@@ -22,6 +22,9 @@ public class Config
     [JsonProperty("globalPreCode", NullValueHandling = NullValueHandling.Ignore)]
     public string? GlobalPreCode;
 
+    [JsonProperty("forProcesses", NullValueHandling = NullValueHandling.Ignore)]
+    public IEnumerable<string>? ForProcesses;
+
     [JsonProperty("devices", NullValueHandling = NullValueHandling.Ignore)]
     public IDictionary<string, DeviceConfig> Devices = new Dictionary<string, DeviceConfig>();
 
@@ -110,7 +113,6 @@ public class DeviceConfig
     public IDictionary<string, IDictionary<string, InputMappingConfig>>? Configs;
 
     [JsonProperty("inputDeviceType")] public string? InputDeviceType;
-
 
     [JsonProperty("_instanceName", NullValueHandling = NullValueHandling.Ignore)]
     public string? InstanceName;
