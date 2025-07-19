@@ -267,7 +267,7 @@ public static class Executor
         return false;
     }
 
-    public static void ParseAction(string action, string id, string button, double value, object rawValue)
+    public static void ParseAction(string action, string id, string button, double? value, object? rawValue)
     {
         var helpers = GetHelperFunctions(id);
 

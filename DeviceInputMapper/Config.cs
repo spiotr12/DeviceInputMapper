@@ -19,6 +19,9 @@ public class Config
     [JsonProperty("modes", NullValueHandling = NullValueHandling.Ignore)]
     public IDictionary<string, ModeConfig> Modes = new Dictionary<string, ModeConfig>();
 
+    [JsonProperty("globalPreCode", NullValueHandling = NullValueHandling.Ignore)]
+    public string? GlobalPreCode;
+
     [JsonProperty("devices", NullValueHandling = NullValueHandling.Ignore)]
     public IDictionary<string, DeviceConfig> Devices = new Dictionary<string, DeviceConfig>();
 
@@ -99,6 +102,9 @@ public class Config
 public class DeviceConfig
 {
     [JsonProperty("description")] public string? Description;
+
+    [JsonProperty("devicePreCode", NullValueHandling = NullValueHandling.Ignore)]
+    public string? DevicePreCode;
 
     [JsonProperty("configs", NullValueHandling = NullValueHandling.Ignore)]
     public IDictionary<string, IDictionary<string, InputMappingConfig>>? Configs;

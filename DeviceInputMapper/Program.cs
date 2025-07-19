@@ -89,6 +89,11 @@ class Program
             var config = rawConfig.ParseConfig();
             State.Config = config;
 
+            if (config.GlobalPreCode != null)
+            {
+                Executor.ParseAction(config.GlobalPreCode, "__globalPreCode__", "__globalPreCode__", null, null);
+            }
+
             foreach (var (id, deviceConfig) in config.Devices)
             {
                 Handler handler = null;
@@ -140,6 +145,11 @@ class Program
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
+                }
+
+                if (deviceConfig.DevicePreCode != null)
+                {
+                    Executor.ParseAction(deviceConfig.DevicePreCode, "__devicePreCode__", "__devicePreCode__", null, null);
                 }
 
                 if (handler != null)
