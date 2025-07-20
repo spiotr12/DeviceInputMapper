@@ -9,14 +9,12 @@
       "parent": "Default"
     }
   },
-  "globalPreCode": "var test1  = \"Hello world\"; log(test1);",
   "forProcesses": [
     "C:\\Users\\Piotrek\\AppData\\Local\\Programs\\Rider\\bin\\rider64.exe"
   ],
   "devices": {
     "dc041e30-414d-11f0-8001-444553540000": {
       "description": "Side Panel",
-      "devicePreCode": "var test2  = \"Hello world2\"; log(test2);",
       "configs": {
         "Default": {
           "X": {
